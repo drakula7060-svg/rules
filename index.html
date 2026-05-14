@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>КОДЕКС ЗОНЫ — Правила сервера</title>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0a0a0b;
+  --card:    #0e0e10;
+  --card2:   #111113;
+  --text:    #c8b99a;
+  --dim:     rgba(200,185,154,0.55);
+  --accent:  #b07ae0;
+  --accent2: rgba(176,122,224,0.15);
+  --success: #34d399;
+  --danger:  #f87171;
+  --amber:   #fbbf24;
+  --border:  rgba(176,122,224,0.18);
+  --borderfaint: rgba(176,122,224,0.07);
+  --H: 'Russo One', sans-serif;
+  --M: 'Share Tech Mono', monospace;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--M);
+  cursor: crosshair;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* scanlines */
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px
+  );
+  pointer-events:none;
+  z-index:9999;
+}
+
+/* ── DOCUMENT WRAP ── */
+.doc {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+/* ── COVER ── */
+.cover {
+  position: relative;
+  padding: 80px 48px 60px;
+  margin-bottom: 0;
+  text-align: center;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+
+.cover-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(176,122,224,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 110%, rgba(176,122,224,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* HUD corners */
+.cover::before, .cover::after {
+  content:'';
+  position:absolute;
+  width:28px; height:28px;
+  border-color: var(--accent);
+  border-style: solid;
+  opacity: 0.5;
+}
+.cover::before { top:16px; left:16px; border-width:2px 0 0 2px; }
+.cover::after  { bottom:16px; right:16px; border-width:0 2px 2px 0; }
+
+.cover-label {
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: var(--accent);
+  opacity: 0.7;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.cover-title {
+  font-family: var(--H);
+  font-size: clamp(32px, 6vw, 62px);
+  line-height: 1.05;
+  color: var(--text);
+  text-shadow: 0 0 40px rgba(176,122,224,0.4);
+  margin-bottom: 8px;
+  animation: glitch 6s infinite;
+}
+
+@keyframes glitch {
+  0%,90%,100% { text-shadow:0 0 40px rgba(176,122,224,0.4); transform:none; }
+  91% { text-shadow:-3px 0 rgba(248,113,113,0.85), 3px 0 rgba(52,211,153,0.85); transform:translateX(2px); }
+  92% { text-shadow: 3px 0 rgba(248,113,113,0.85),-3px 0 rgba(52,211,153,0.85); transform:translateX(-2px); }
+  93% { text-shadow:0 0 40px rgba(176,122,224,0.4); transform:none; }
+}
+
+.cover-sub {
+  font-family: var(--H);
+  font-size: clamp(14px, 2.5vw, 20px);
+  color: var(--accent);
+  opacity: 0.75;
+  letter-spacing: 3px;
+  margin-bottom: 36px;
+}
+
+.cover-line {
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  margin: 0 auto 32px;
+}
+
+.consent-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(248,113,113,0.07);
+  border: 1px solid rgba(248,113,113,0.28);
+  padding: 12px 24px;
+  font-size: 12px;
+  color: var(--danger);
+  letter-spacing: 1px;
+  line-height: 1.5;
+  text-align: left;
+  max-width: 560px;
+}
+
+/* ── INTRO ── */
+.intro-block {
+  padding: 32px 0;
+  border-bottom: 1px solid var(--borderfaint);
+  margin-bottom: 48px;
+}
+
+.intro-block p {
+  font-size: 13.5px;
+  line-height: 1.85;
+  color: var(--dim);
+  margin-bottom: 10px;
+}
+.intro-block p:last-child { margin:0; }
+
+.intro-sign {
+  margin-top: 20px;
+  font-family: var(--H);
+  font-size: 13px;
+  color: var(--success);
+}
+
+/* ── SECTION HEADING ── */
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 52px 0 28px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.sec-head::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0;
+  width: 60px; height: 1px;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+}
+
+.sec-num {
+  font-family: var(--H);
+  font-size: 36px;
+  color: var(--accent);
+  opacity: 0.35;
+  line-height: 1;
+  min-width: 52px;
+}
+
+.sec-title {
+  font-family: var(--H);
+  font-size: clamp(16px, 2.5vw, 22px);
+  color: var(--text);
+  letter-spacing: 1px;
+}
+
+.sec-count {
+  margin-left: auto;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(200,185,154,0.3);
+}
+
+/* ── RULE CARD ── */
+.rule {
+  position: relative;
+  padding: 18px 20px 16px 20px;
+  margin-bottom: 2px;
+  background: var(--card);
+  border-left: 2px solid transparent;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.rule:hover {
+  border-left-color: rgba(176,122,224,0.4);
+  background: var(--card2);
+}
+
+/* subtle right-angle on hover */
+.rule::after {
+  content:'';
+  position:absolute;
+  bottom:0; right:0;
+  width:0; height:0;
+  border-style:solid;
+  border-width:0 0 6px 6px;
+  border-color:transparent transparent rgba(176,122,224,0.2) transparent;
+}
+
+.rule-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.rule-num {
+  font-family: var(--H);
+  font-size: 11px;
+  color: var(--accent);
+  min-width: 44px;
+  padding-top: 3px;
+  opacity: 0.85;
+}
+
+.rule-name {
+  font-family: var(--H);
+  font-size: 13px;
+  color: var(--text);
+  flex: 1;
+  line-height: 1.3;
+}
+
+/* badges */
+.badges { display:flex; gap:4px; flex-shrink:0; flex-wrap:wrap; }
+.badge {
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 2px 7px;
+  font-family: var(--M);
+}
+.bw { background:rgba(251,191,36,0.1);  color:var(--amber);  border:1px solid rgba(251,191,36,0.3); }
+.bb { background:rgba(248,113,113,0.1); color:var(--danger); border:1px solid rgba(248,113,113,0.3); }
+.bp { background:rgba(248,113,113,0.18);color:var(--danger); border:1px solid var(--danger); font-family:var(--H); font-size:9px; }
+.bi { background:rgba(176,122,224,0.1); color:var(--accent); border:1px solid rgba(176,122,224,0.3); }
+.bs { background:rgba(52,211,153,0.08); color:var(--success);border:1px solid rgba(52,211,153,0.3); }
+
+/* rule body */
+.rule-body {
+  padding-left: 56px;
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: var(--dim);
+}
+
+.note {
+  margin-top: 8px;
+  padding: 7px 12px;
+  background: rgba(176,122,224,0.04);
+  border-left: 2px solid rgba(176,122,224,0.4);
+  font-size: 11.5px;
+  color: rgba(200,185,154,0.55);
+  font-style: italic;
+}
+
+/* examples */
+.examples {
+  margin-top: 9px;
+}
+.eg-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(200,185,154,0.35);
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.eg {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 3px 0;
+  font-size: 12px;
+  color: rgba(200,185,154,0.5);
+  line-height: 1.65;
+}
+.eg::before { content:'◾'; color:var(--amber); flex-shrink:0; font-size:9px; margin-top:4px; }
+
+/* deny / allow blocks */
+.blk-deny, .blk-ok {
+  margin-top: 9px;
+  padding: 9px 14px;
+}
+.blk-deny { background:rgba(248,113,113,0.04); border-left:2px solid rgba(248,113,113,0.5); }
+.blk-ok   { background:rgba(52,211,153,0.04);  border-left:2px solid rgba(52,211,153,0.5); }
+.blk-t {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.blk-deny .blk-t { color:var(--danger); }
+.blk-ok   .blk-t { color:var(--success); }
+
+/* subrule */
+.subrule {
+  margin-top: 8px;
+  padding: 9px 12px;
+  background: rgba(176,122,224,0.03);
+  border: 1px solid var(--borderfaint);
+}
+.subrule-n { font-size:10px; color:var(--accent); margin-bottom:4px; font-family:var(--H); }
+.subrule-t { font-size:12px; color:rgba(200,185,154,0.6); line-height:1.65; }
+
+/* ── SPECIAL: RMT ── */
+.rmt-card {
+  margin: 48px 0;
+  padding: 24px 28px;
+  background: rgba(251,191,36,0.04);
+  border: 1px solid rgba(251,191,36,0.22);
+  position: relative;
+}
+.rmt-card::before, .rmt-card::after {
+  content:'';
+  position:absolute;
+  width:14px; height:14px;
+  border-color:var(--amber);
+  border-style:solid;
+  opacity:0.5;
+}
+.rmt-card::before { top:8px; left:8px; border-width:1px 0 0 1px; }
+.rmt-card::after  { bottom:8px; right:8px; border-width:0 1px 1px 0; }
+
+.rmt-head {
+  font-family: var(--H);
+  color: var(--amber);
+  font-size: 15px;
+  margin-bottom: 12px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.rmt-body { font-size:13px; color:var(--dim); line-height:1.8; }
+
+/* ── DIVIDER ── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 56px 0 0;
+  opacity: 0.3;
+}
+.divider::before, .divider::after {
+  content:'';
+  flex:1;
+  height:1px;
+  background: var(--accent);
+}
+.divider span {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+/* ── FOOTER ── */
+footer {
+  margin-top: 80px;
+  padding: 28px 0;
+  border-top: 1px solid var(--borderfaint);
+  text-align: center;
+  font-size: 11px;
+  color: rgba(200,185,154,0.2);
+  letter-spacing: 2px;
+}
+footer span { color: rgba(176,122,224,0.4); }
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <!-- ══ ОБЛОЖКА ══ -->
+  <div class="cover">
+    <div class="cover-glow"></div>
+    <div class="cover-label">[ OVERCOMING RP · ZONE PROTOCOL ]</div>
+    <div class="cover-title">КОДЕКС<br>ВЫЖИВАНИЯ</div>
+    <div class="cover-sub">Правила Сервера</div>
+    <div class="cover-line"></div>
+    <div class="consent-box">
+      ⚠&nbsp;&nbsp;Подключаясь к серверу, вы автоматически соглашаетесь с изложенными ниже правилами и берёте на себя обязательство их соблюдать.
+    </div>
+  </div>
+
+  <!-- ══ ВВЕДЕНИЕ ══ -->
+  <div class="intro-block">
+    <p>Правила обязательны к прочтению и соблюдению. Администрация имеет право заблокировать игрока при систематическом нарушении правил игры на проекте или правил Discord, а также при обнаружении со стороны игрока действий, которые могут нанести вред серверу, комьюнити или Администрации.</p>
+    <p>При возникновении вопросов касательно правил вы, в первую очередь, должны руководствоваться здравым смыслом и отталкиваться исключительно от первозданно заложенной в правила сути. Не пытайтесь интерпретировать их по своему, в угоду своей выгоды.</p>
+    <p>Относитесь к другим членам комьюнити с уважением, а иногда и с терпением.</p>
+    <div class="intro-sign">— Приятной игры, сталкер.</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       РАЗДЕЛ 2 · ТЕРМИНЫ RP
+  ═══════════════════════════════════════════ -->
+  <div class="sec-head">
+    <div class="sec-num">02</div>
+    <div class="sec-title">Термины RolePlay</div>
+    <div class="sec-count">РАЗДЕЛ 2</div>
+  </div>
+
+  <!-- 2.1 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.1</div>
+      <div class="rule-name">RolePlay (RP)</div>
+      <div class="badges"><span class="badge bi">ТЕРМИН</span></div>
+    </div>
+    <div class="rule-body">
+      Форма интерактивного повествования, в котором участники играют определённые роли в вымышленном мире, создавая уникальные истории и взаимодействуя с другими игроками.
+    </div>
+  </div>
+
+  <!-- 2.2 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.2</div>
+      <div class="rule-name">PowerGaming (PG)</div>
+      <div class="badges"><span class="badge bw">ПРЕДУПР.</span><span class="badge bb">БАН</span></div>
+    </div>
+    <div class="rule-body">
+      Нереалистичное поведение персонажа — отсутствие страха за свою жизнь.
+      <div class="note">Не распространяется на членов фанатичных группировок.</div>
+      <div class="examples">
+        <div class="eg-label">Примеры</div>
+        <div class="eg">Нападение с ножом на человека с огнестрельным оружием или на сильного мутанта.</div>
+        <div class="eg">Нереалистичное поведение в плену: сопротивление, отказ отвечать под дулом ствола.</div>
+        <div class="eg">Попытка сопротивляться группе, превосходящей вас численно более чем в 2 раза.</div>
+        <div class="eg">Открытие огня на Зелёной Зоне. Исключение: владельцы данной ЗЗ.</div>
+        <div class="eg">Агрессивные действия после потери сознания, будучи окружённым противником (×2+).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.3 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.3</div>
+      <div class="rule-name">NonRP</div>
+      <div class="badges"><span class="badge bw">ПРЕДУПР.</span><span class="badge bb">БАН</span></div>
+    </div>
+    <div class="rule-body">
+      Нереалистичное поведение персонажа и/или группировки во время отыгрыша. Поведение должно соответствовать поведению в аналогичных ситуациях в реальной жизни.
+      <div class="note">RP-Куратор может самостоятельно определять, какие действия являются NonRP.</div>
+      <div class="examples">
+        <div class="eg-label">Примеры</div>
+        <div class="eg">Многократное необоснованное чередование клавиш Q/E в RP-процессе.</div>
+        <div class="eg">Использование обращений «Обратись к богам», «Ожидай высших сил» и т.п.</div>
+        <div class="eg">Беспричинное сковывание/связывание человека.</div>
+        <div class="eg">Использование оборудования техника/медика необученным лицом.</div>
+        <div class="eg">Женский персонаж с мужским голосом. Клиппинг предметов.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.4 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.4</div>
+      <div class="rule-name">MetaGaming</div>
+      <div class="badges"><span class="badge bw">ПРЕДУПР.</span><span class="badge bb">БАН</span></div>
+    </div>
+    <div class="rule-body">
+      Использование и распространение информации, полученной вне игрового процесса, при отыгрыше своей роли. Вся информация персонажа добывается исключительно внутриигровым путём.
+      <div class="subrule">
+        <div class="subrule-n">2.4.1</div>
+        <div class="subrule-t">Запрещены изощрённые оскорбления сексуального характера, напрямую призывающие к подобным действиям. Распространённые выражения в косвенном смысле — разрешены. Абуз правила оценивается RP-куратором.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.5 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.5</div>
+      <div class="rule-name">RDM / DM — Random Death Match</div>
+      <div class="badges"><span class="badge bb">БАН</span></div>
+    </div>
+    <div class="rule-body">
+      Убийство или нанесение урона без веской причины.
+      <div class="blk-deny">
+        <div class="blk-t">Запрещено</div>
+        <div class="eg">Убийство за словесные оскорбления (кроме оскорблений родных, религии, веры).</div>
+        <div class="eg">Нанесение урона многократным избиением (2 раза и более) без должной причины.</div>
+        <div class="eg">Урон/убийство, мотивированное мета-дружбой или конфликтами вне игры.</div>
+        <div class="eg">Наезд на человека со смертельным исходом — засчитывается за RDM даже в условиях войны. Исключение: человек намеренно игнорирует движущийся транспорт.</div>
+      </div>
+      <div class="blk-ok">
+        <div class="blk-t">Разрешено</div>
+        <div class="eg">Месть ОПГ — если вы стали жертвой грабежа без убийства. Право мести действует до первой победы. Применяется только для «Братвы», «Ренегатов» и «Слизней».</div>
+        <div class="eg">Убийство в защиту своего имущества (при наличии доказательств).</div>
+        <div class="eg">RDM по фанатичным группировкам после первой встречи (Исключение — Тени).</div>
+        <div class="eg">Убийство в ответ на прицеливание ближе ~100 м, провокационные жесты или устную угрозу.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.6 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.6</div>
+      <div class="rule-name">Leave RP</div>
+      <div class="badges"><span class="badge bw">ПРЕДУПР.</span><span class="badge bb">БАН</span></div>
+    </div>
+    <div class="rule-body">
+      Самовольный выход из игры или РП-процесса во время активного ролевого взаимодействия.
+      <div class="note">При непреодолимой силе — сообщите в Discord и вернитесь как можно скорее. Отключение электричества и плохое самочувствие — уважительные причины.</div>
+    </div>
+  </div>
+
+  <!-- 2.7 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.7</div>
+      <div class="rule-name">New Life Rule (NLR)</div>
+      <div class="badges"><span class="badge bw">ПРЕДУПР.</span></div>
+    </div>
+    <div class="rule-body">
+      Отыгрыш тяжёлого ранения и потери памяти с момента выхода из последней Зелёной зоны. Длительность — <span style="color:var(--amber);font-family:var(--H)">15 минут</span>.
+      <div class="blk-deny">
+        <div class="blk-t">В течение 15 минут запрещено</div>
+        <div class="eg">Покидать склад/комнату с трейдером своей группировки (или ждать в деревне новичков).</div>
+        <div class="eg">Выходить на RP-рацию.</div>
+        <div class="eg">Возвращаться на место смерти.</div>
+      </div>
+      <div class="note">По истечении 15 минут все ограничения снимаются. Возврат на место смерти разрешён при наличии RP-информации.</div>
+    </div>
+  </div>
+
+  <!-- 2.8 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.8</div>
+      <div class="rule-name">AFK — Away From Keyboard</div>
+      <div class="badges"><span class="badge bw">ПРЕДУПР.</span></div>
+    </div>
+    <div class="rule-body">
+      Отсутствие контроля над персонажем во время нахождения в игре. Для обозначения АФК — используйте анимацию <span style="color:var(--accent)">фейспалм</span>. Нарушает РП-атмосферу и подвергает персонажа необоснованному риску.
+    </div>
+  </div>
+
+  <!-- 2.9 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.9</div>
+      <div class="rule-name">RPK — Roleplay Kill</div>
+      <div class="badges"><span class="badge bp">СМЕРТЬ ПЕРСОНАЖА</span></div>
+    </div>
+    <div class="rule-body">
+      Смерть персонажа, после которой все знания о Зоне, знакомства и навыки теряются. Необходимо сменить ник и начать заново.
+      <div class="note">Добровольная отправка на Большую землю не является РП-смертью. При добровольном покидании Зоны вернуть персонажа можно только через <span style="color:var(--amber)">14 дней</span>.</div>
+    </div>
+  </div>
+
+  <!-- 2.10 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.10</div>
+      <div class="rule-name">Team KILL (TK)</div>
+      <div class="badges"><span class="badge bb">БАН</span></div>
+    </div>
+    <div class="rule-body">
+      Умышленное убийство или нанесение урона члену своей группировки. Портит РП-атмосферу.
+      <div class="note">Исключение: подозрение в предательстве.</div>
+    </div>
+  </div>
+
+  <!-- 2.11 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.11</div>
+      <div class="rule-name">Spawn Kill (SK)</div>
+      <div class="badges"><span class="badge bb">БАН</span></div>
+    </div>
+    <div class="rule-body">
+      Убийство или кемпинг на месте появления персонажа — после входа в игру или во время телепортации между локациями. Приравнивается к RDM.
+      <div class="note">Оставляйте другим участникам шанс для манёвра.</div>
+    </div>
+  </div>
+
+  <!-- 2.12 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.12</div>
+      <div class="rule-name">Rule Abuse (RA)</div>
+      <div class="badges"><span class="badge bp">БАН · ПЕРМА</span></div>
+    </div>
+    <div class="rule-body">
+      Использование несовершенств правил с целью получения собственной выгоды. Игроки, намеренно обходящие правила или скрывающие информацию о нарушениях — будут наказаны.
+      <div class="note">Заметили нестыковку в правилах? Обратитесь к администрации.</div>
+    </div>
+  </div>
+
+  <!-- 2.13 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.13</div>
+      <div class="rule-name">Идентификация по голосу</div>
+      <div class="badges"><span class="badge bw">ПРЕДУПР.</span></div>
+    </div>
+    <div class="rule-body">
+      Запрещено идентифицировать человека по голосу. Исключение: ваша встреча была не первой (требуются доказательства). Идентифицировать человека можно, запомнив лицо — если оно не скрыто.
+    </div>
+  </div>
+
+  <!-- 2.14 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.14</div>
+      <div class="rule-name">Доказательства RP-информации</div>
+      <div class="badges"><span class="badge bi">ОБЯЗАТЕЛЬНО</span></div>
+    </div>
+    <div class="rule-body">Важная информация, добытая RP-путём, должна быть подкреплена доказательствами.</div>
+  </div>
+
+  <!-- 2.15 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.15</div>
+      <div class="rule-name">Использование краша / рестарта</div>
+      <div class="badges"><span class="badge bb">БАН</span></div>
+    </div>
+    <div class="rule-body">Запрещено использовать краш/рестарт сервера с целью сближения с противниками и их пленения или уничтожения.</div>
+  </div>
+
+  <!-- 2.16 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.16</div>
+      <div class="rule-name">Современный сленг</div>
+      <div class="badges"><span class="badge bw">ПРЕДУПР.</span></div>
+    </div>
+    <div class="rule-body">Запрещён сленг, не соответствующий году на сервере и/или атмосфере Сталкера.</div>
+  </div>
+
+  <!-- 2.17 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.17</div>
+      <div class="rule-name">Ники администрации</div>
+      <div class="badges"><span class="badge bb">БАН</span></div>
+    </div>
+    <div class="rule-body">Запрещено использовать ники администрации сервера.</div>
+  </div>
+
+  <!-- 2.18 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.18</div>
+      <div class="rule-name">Вольные сталкеры — агрессия в ЧЗО</div>
+      <div class="badges"><span class="badge bw">ПРЕДУПР.</span></div>
+    </div>
+    <div class="rule-body">
+      Вольным сталкерам запрещено проявлять вооружённую агрессию ко всем сталкерам/членам группировок на территории ЧЗО.
+      <div class="note">Исключения: угроза жизни, грабёж, красная зона.</div>
+    </div>
+  </div>
+
+  <!-- 2.19 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.19</div>
+      <div class="rule-name">Вольные сталкеры — грабёж</div>
+      <div class="badges"><span class="badge bb">БАН</span></div>
+    </div>
+    <div class="rule-body">Вольным сталкерам запрещено грабить других сталкеров.</div>
+  </div>
+
+  <!-- 2.20 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.20</div>
+      <div class="rule-name">Действия сексуального характера</div>
+      <div class="badges"><span class="badge bp">ПЕРМА-БАН</span></div>
+    </div>
+    <div class="rule-body">Запрещены любые действия сексуального характера.</div>
+  </div>
+
+  <!-- 2.21 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.21</div>
+      <div class="rule-name">Гоп-стоп после рестарта</div>
+      <div class="badges"><span class="badge bi">ПРАВИЛО</span></div>
+    </div>
+    <div class="rule-body">После рестарта/краша сервера гоп-стоп разрешён после времени, когда разрешена агрессия в соответствии с пунктами 1.15.</div>
+  </div>
+
+  <!-- 2.22 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.22</div>
+      <div class="rule-name">Срок подачи жалоб</div>
+      <div class="badges"><span class="badge bi">ПРАВИЛО</span></div>
+    </div>
+    <div class="rule-body">Жалоба подаётся в течение <span style="color:var(--amber)">24 часов</span> с момента нарушения. После — жалобы не рассматриваются.</div>
+  </div>
+
+  <!-- 2.23 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.23</div>
+      <div class="rule-name">Сохранность доказательств</div>
+      <div class="badges"><span class="badge bi">ПРАВИЛО</span></div>
+    </div>
+    <div class="rule-body">При подаче жалобы запрещено удалять доказательства нарушения, если прошло менее <span style="color:var(--amber)">48 часов</span>.</div>
+  </div>
+
+  <!-- 2.24 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.24</div>
+      <div class="rule-name">Чужой позывной</div>
+      <div class="badges"><span class="badge bw">ПРЕДУПР.</span></div>
+    </div>
+    <div class="rule-body">Запрещено представляться другим позывным, если ваше лицо видели без маски.</div>
+  </div>
+
+  <!-- 2.25 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.25</div>
+      <div class="rule-name">Скрытие багов и уязвимостей</div>
+      <div class="badges"><span class="badge bb">БАН</span></div>
+    </div>
+    <div class="rule-body">Запрещено скрывать от администрации баги и уязвимости системы, а также распространять их.</div>
+  </div>
+
+  <!-- 2.26 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.26</div>
+      <div class="rule-name">Укрывательство нарушителей</div>
+      <div class="badges"><span class="badge bb">БАН</span></div>
+    </div>
+    <div class="rule-body">Запрещено скрывать от администрации злоумышленников.</div>
+  </div>
+
+  <!-- 2.27 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.27</div>
+      <div class="rule-name">Выдавание себя за администратора</div>
+      <div class="badges"><span class="badge bp">ПЕРМА-БАН</span></div>
+    </div>
+    <div class="rule-body">Запрещено выдавать себя за администратора сервера.</div>
+  </div>
+
+  <!-- 2.28 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.28</div>
+      <div class="rule-name">Вред экономике сервера</div>
+      <div class="badges"><span class="badge bp">ПЕРМА-БАН</span></div>
+    </div>
+    <div class="rule-body">Запрещено нанесение вреда экономике сервера.</div>
+  </div>
+
+  <!-- 2.29–2.30 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.29–2.30</div>
+      <div class="rule-name">Стороннее ПО / Читы</div>
+      <div class="badges"><span class="badge bp">ПЕРМА-БАН</span></div>
+    </div>
+    <div class="rule-body">
+      Запрещено использование стороннего ПО для получения игрового преимущества.
+      <div class="note">Администрация вправе провести проверку ПК. Отказ от проверки или выход во время неё — приравнивается к наличию запрещённого ПО.</div>
+      <div class="subrule">
+        <div class="subrule-n">2.30.1</div>
+        <div class="subrule-t">Запрещено использование фильтров, изменяющих параметры графики: ReShade (SweetFX), NVIDIA Freestyle и их аналоги.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.31 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.31</div>
+      <div class="rule-name">Сторонние файлы / Конфиги</div>
+      <div class="badges"><span class="badge bp">ПЕРМА-БАН</span></div>
+    </div>
+    <div class="rule-body">
+      Запрещено использование посторонних файлов для получения игрового преимущества.
+      <div class="subrule">
+        <div class="subrule-n">2.31.1</div>
+        <div class="subrule-t">Запрещено изменять параметры игры за пределами возможностей встроенного интерфейса.</div>
+      </div>
+      <div class="subrule">
+        <div class="subrule-n">2.31.2</div>
+        <div class="subrule-t">Запрещено изменение конфигурационных файлов (конфигов) вручную или с помощью сторонних программ.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.32 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.32</div>
+      <div class="rule-name">Игнорирование игроков</div>
+      <div class="badges"><span class="badge bw">NonRP</span></div>
+    </div>
+    <div class="rule-body">
+      Запрещено полностью игнорировать игроков. Проводите минимальный RP-процесс. Дайте хоть какой-то ответ: «Не до тебя, сталкер», «Подожди» и т.д.
+      <div class="note">Нарушение расценивается как NonRP (п. 1.3).</div>
+    </div>
+  </div>
+
+  <!-- 2.33 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.33</div>
+      <div class="rule-name">Вылет во время RP</div>
+      <div class="badges"><span class="badge bi">ОБЯЗАТЕЛЬНО</span></div>
+    </div>
+    <div class="rule-body">При вылете во время RP-ситуации — отпишите в канал <span style="color:var(--accent)">#rp-вылет</span> в Discord.</div>
+  </div>
+
+  <!-- 2.34 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.34</div>
+      <div class="rule-name">Текстовый чат в RP</div>
+      <div class="badges"><span class="badge bi">ПРАВИЛО</span></div>
+    </div>
+    <div class="rule-body">
+      При невозможности использовать голосовой чат — разрешён текстовый (Enter), но только при отыгрыше передачи информации через КПК, бумагу или иной предмет.
+      <div class="note">Без отыгрыша — текст не виден другим игрокам. Иначе — NonRP.</div>
+    </div>
+  </div>
+
+  <!-- 2.35 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.35</div>
+      <div class="rule-name">Агрессия вольных сталкеров</div>
+      <div class="badges"><span class="badge bs">РАЗРЕШЕНО</span></div>
+    </div>
+    <div class="rule-body">Вольным сталкерам разрешено проявлять агрессию в соответствии с пунктами правил №4 и №1.6.</div>
+  </div>
+
+  <!-- 2.36 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.36</div>
+      <div class="rule-name">Размещение фурнитуры</div>
+      <div class="badges"><span class="badge bw">ПРЕДУПР.</span></div>
+    </div>
+    <div class="rule-body">Запрещено ставить фурнитуру в любых местах, кроме складов группировок (только владельцам ЗЗ), купленных домов/лагерей.</div>
+  </div>
+
+  <!-- 2.37 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.37</div>
+      <div class="rule-name">Использование гранат</div>
+      <div class="badges"><span class="badge bw">ПРЕДУПР.</span></div>
+    </div>
+    <div class="rule-body">Гранаты разрешены только как метательное оружие. Запрещено использовать их как ловушки, растяжки или устанавливать на поверхностях.</div>
+  </div>
+
+  <!-- 2.48 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.48</div>
+      <div class="rule-name">Личная информация участников</div>
+      <div class="badges"><span class="badge bp">ПЕРМА-БАН</span></div>
+    </div>
+    <div class="rule-body">Любое использование или распространение личной информации участников проекта (игроков и администрации) — только с их согласия.</div>
+  </div>
+
+  <!-- 2.50 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.50</div>
+      <div class="rule-name">Публичные баны с других серверов</div>
+      <div class="badges"><span class="badge bp">БАН БЕЗ ПРОВЕРКИ</span></div>
+    </div>
+    <div class="rule-body">Администрация вправе выдать бан без дополнительной проверки при наличии публичных банов за читы на других проектах.</div>
+  </div>
+
+  <!-- 2.51 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.51</div>
+      <div class="rule-name">Записи (откаты) — требования</div>
+      <div class="badges"><span class="badge bi">ПРАВИЛО</span></div>
+    </div>
+    <div class="rule-body">Записи игрового процесса («Откаты») должны содержать звук игры и микрофона. В ином случае администрация вправе не принять такой откат.</div>
+  </div>
+
+  <!-- 2.53 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.53</div>
+      <div class="rule-name">Кемпинг телепортов</div>
+      <div class="badges"><span class="badge bb">БАН</span></div>
+    </div>
+    <div class="rule-body">Запрещено кемпить входы и выходы телепортов в данжи/лаборатории/ТП группировок в радиусе <span style="color:var(--amber)">150–200 метров</span>.</div>
+  </div>
+
+  <!-- 2.54 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.54</div>
+      <div class="rule-name">Фото/видеофиксация RP-информации</div>
+      <div class="badges"><span class="badge bi">ПРАВИЛО</span></div>
+    </div>
+    <div class="rule-body">
+      Фиксация RP-информации действительна только при использовании видеокамеры/фотоаппарата внутри игры.
+      <div class="note">КПК не может записывать фото/видео/голос.</div>
+    </div>
+  </div>
+
+  <!-- 2.55 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.55</div>
+      <div class="rule-name">Скины фанатичных группировок</div>
+      <div class="badges"><span class="badge bb">БАН</span></div>
+    </div>
+    <div class="rule-body">
+      Запрещено самостоятельно выбирать скин персонажа фанатичной группировки.
+      <div class="note">Данных игроков разрешено убивать без предупреждения.</div>
+    </div>
+  </div>
+
+  <!-- 2.56 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.56</div>
+      <div class="rule-name">Клевета на администрацию</div>
+      <div class="badges"><span class="badge bp">ПЕРМА-БАН</span></div>
+    </div>
+    <div class="rule-body">Неподкреплённые доказательствами обвинения в сторону администрации расцениваются как клевета и наказываются блокировкой.</div>
+  </div>
+
+  <!-- 2.57 -->
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">2.57</div>
+      <div class="rule-name">Ник в лаунчере и КПК</div>
+      <div class="badges"><span class="badge bw">ПРЕДУПР.</span></div>
+    </div>
+    <div class="rule-body">В лаунчере должен отображаться корректный ник, совпадающий с именем персонажа. Имя должно соответствовать лору группировки или сеттингу Сталкера. Имя в КПК — совпадать с именем персонажа.</div>
+  </div>
+
+  <!-- ══ RMT ══ -->
+  <div class="divider"><span>⬡</span></div>
+
+  <div class="rmt-card" id="rmt">
+    <div class="rmt-head">
+      <span class="badge bp" style="font-size:10px;padding:3px 9px;">ПЕРМА-БАН</span>
+      RMT — Real Money Trade
+    </div>
+    <div class="rmt-body">
+      Торговля внутриигровыми ценностями за реальные деньги — строго запрещена. Вы не можете продавать предметы, транспорт, достижения или что-либо иное.<br><br>
+      Если вы обнаружили факт купли-продажи — сообщите администрации. При подтверждении вы получите награду за содействие.
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       РАЗДЕЛ 3 · ОСНОВНЫЕ ПРАВИЛА
+  ═══════════════════════════════════════════ -->
+  <div class="sec-head">
+    <div class="sec-num">03</div>
+    <div class="sec-title">Основные правила сервера</div>
+    <div class="sec-count">РАЗДЕЛ 3</div>
+  </div>
+
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">3.1</div>
+      <div class="rule-name">Политика, пропаганда, экстремизм</div>
+      <div class="badges"><span class="badge bp">ПЕРМА-БАН</span></div>
+    </div>
+    <div class="rule-body">Запрещено обсуждение политических тем, пропаганда наркотиков, алкоголя, фашизма, нацизма, национализма, экстремизма, а также действия, разжигающие межнациональную рознь.</div>
+  </div>
+
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">3.2</div>
+      <div class="rule-name">Реклама сторонних проектов</div>
+      <div class="badges"><span class="badge bp">ПЕРМА-БАН</span></div>
+    </div>
+    <div class="rule-body">Запрещена реклама сторонних проектов в любом виде.</div>
+  </div>
+
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">3.3</div>
+      <div class="rule-name">Оскорбления игроков</div>
+      <div class="badges"><span class="badge bp">ПЕРМА-БАН</span></div>
+    </div>
+    <div class="rule-body">
+      Запрещены оскорбления, переходящие на личность игрока (исключение: словесная перепалка в RP). Запрещено упоминание родных и близких с целью оскорбить — в Discord, во время RP, в личных сообщениях.
+    </div>
+  </div>
+
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">3.4</div>
+      <div class="rule-name">Ознакомление с правилами</div>
+      <div class="badges"><span class="badge bi">ОБЯЗАТЕЛЬНО</span></div>
+    </div>
+    <div class="rule-body">Игрок обязан ознакомиться с правилами проекта прежде, чем начать играть.</div>
+  </div>
+
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">3.5</div>
+      <div class="rule-name">Возраст RP-персонажа</div>
+      <div class="badges"><span class="badge bi">ПРАВИЛО</span></div>
+    </div>
+    <div class="rule-body">Вашему RP-персонажу должно быть не менее <span style="color:var(--amber)">18 лет</span>.</div>
+  </div>
+
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">3.6</div>
+      <div class="rule-name">Обман администрации</div>
+      <div class="badges"><span class="badge bp">ПЕРМА-БАН</span></div>
+    </div>
+    <div class="rule-body">Обман администрации проекта наказуем вплоть до перманентной блокировки.</div>
+  </div>
+
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">3.7</div>
+      <div class="rule-name">Сторонние программы</div>
+      <div class="badges"><span class="badge bp">ПЕРМА-БАН</span></div>
+    </div>
+    <div class="rule-body">Запрещено любое использование сторонних программ. Администрация вправе выдать наказание при их обнаружении.</div>
+  </div>
+
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">3.8</div>
+      <div class="rule-name">Плагины для Discord</div>
+      <div class="badges"><span class="badge bb">БАН</span></div>
+    </div>
+    <div class="rule-body">Запрещено использование плагинов для просмотра закрытых каналов в Discord.</div>
+  </div>
+
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">3.9</div>
+      <div class="rule-name">Обход блокировки / продажа аккаунтов</div>
+      <div class="badges"><span class="badge bp">ПЕРМА-БАН</span></div>
+    </div>
+    <div class="rule-body">При попытке обхода блокировки, продажи, передачи или взлома аккаунта — наказание неизбежно.</div>
+  </div>
+
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">3.10</div>
+      <div class="rule-name">Оскорбления администрации и проекта</div>
+      <div class="badges"><span class="badge bp">ПЕРМА-БАН</span></div>
+    </div>
+    <div class="rule-body">Запрещены любые оскорбления администрации проекта и/или самого проекта.</div>
+  </div>
+
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">3.11</div>
+      <div class="rule-name">Мультиаккаунт</div>
+      <div class="badges"><span class="badge bp">ПЕРМА-БАН</span></div>
+    </div>
+    <div class="rule-body">Запрещено использование более одного аккаунта на сервере или в Discord.</div>
+  </div>
+
+  <div class="rule">
+    <div class="rule-top">
+      <div class="rule-num">3.12</div>
+      <div class="rule-name">Баги / Дюп / Уязвимости</div>
+      <div class="badges"><span class="badge bp">ПЕРМА-БАН</span></div>
+    </div>
+    <div class="rule-body">Запрещено использование багов, дюпа и любых игровых уязвимостей.</div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>OVERCOMING RP</span> · КОДЕКС ВЫЖИВАНИЯ · ВСЕ ПРАВА ЗАЩИЩЕНЫ
+  </footer>
+
+</div>
+</body>
+</html>
