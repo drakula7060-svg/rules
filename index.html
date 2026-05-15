@@ -160,8 +160,16 @@ mark{background:rgba(176,122,224,0.3);color:var(--accent);border-radius:1px;}
 footer{margin-top:80px;padding:24px 0;border-top:1px solid var(--border-f);text-align:center;font-size:11px;color:rgba(240,230,211,0.18);letter-spacing:2px;}
 footer span{color:rgba(176,122,224,0.35);}
 /* SMART HEADER */
-header{transition:top .28s ease;}
-header.hdr-up{top:calc(-1 * var(--hdr) - 2px);}
+header{transition:top .3s cubic-bezier(.4,0,.2,1);}
+
+/* SEARCH NAV */
+.snav{display:none;align-items:center;gap:3px;}
+.snav.show{display:flex;}
+.snav-info{font-size:11px;color:var(--text-xs);min-width:36px;text-align:center;white-space:nowrap;}
+.snav-btn{font-family:var(--M);font-size:13px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--border);color:var(--text-xs);cursor:crosshair;transition:all .15s;flex-shrink:0;}
+.snav-btn:hover{border-color:var(--accent);color:var(--accent);}
+.snav-btn.snav-close{font-size:11px;}
+.rule.res-cur{border-left-color:var(--accent)!important;background:rgba(176,122,224,0.07)!important;}
 
 /* RULE REF TOOLTIP */
 .rref{color:var(--accent);border-bottom:1px dashed rgba(176,122,224,0.5);cursor:help;white-space:nowrap;}
@@ -189,6 +197,12 @@ header.hdr-up{top:calc(-1 * var(--hdr) - 2px);}
   <div class="search-wrap">
     <span class="si">⌕</span>
     <input id="search" type="text" placeholder="Поиск по правилам... (Ctrl+F)" autocomplete="off" spellcheck="false">
+  </div>
+  <div class="snav" id="snav">
+    <span class="snav-info" id="snav-info"></span>
+    <button class="snav-btn" onclick="stepResult(-1)" title="Предыдущий (Shift+Enter)">↑</button>
+    <button class="snav-btn" onclick="stepResult(1)"  title="Следующий (Enter)">↓</button>
+    <button class="snav-btn snav-close" onclick="clearSearch()" title="Сбросить (Esc)">✕</button>
   </div>
   <div class="filters">
     <button class="flt active" data-f="all">ВСЕ</button>
@@ -1060,17 +1074,25 @@ document.getElementById('cnt-5').textContent  = document.querySelectorAll('#sec-
 document.getElementById('cnt-57').textContent = document.querySelectorAll('#sec-57 .rule').length;
 document.getElementById('cnt-6').textContent  = document.querySelectorAll('#sec-6 .rule').length;
 
-const prog = document.getElementById('prog');
-const btt  = document.getElementById('btt');
+const prog  = document.getElementById('prog');
+const btt   = document.getElementById('btt');
 const hdrEl = document.querySelector('header');
-let lastScrollY = 0;
+const HDR_H = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hdr')) || 56;
+let lastScrollY = 0, hdrHidden = false;
+
+function setHdr(hide) {
+  if (hide === hdrHidden) return;
+  hdrHidden = hide;
+  hdrEl.style.top = hide ? (-HDR_H - 2) + 'px' : '0px';
+}
+
 window.addEventListener('scroll', () => {
   const h = document.documentElement;
-  const y = window.scrollY || h.scrollTop;
+  const y = window.pageYOffset !== undefined ? window.pageYOffset : (h.scrollTop || document.body.scrollTop);
   prog.style.width = (y / (h.scrollHeight - h.clientHeight) * 100) + '%';
   btt.classList.toggle('show', y > 500);
-  if (y > lastScrollY && y > 80) hdrEl.classList.add('hdr-up');
-  else hdrEl.classList.remove('hdr-up');
+  if (y > 80) setHdr(y > lastScrollY);
+  else setHdr(false);
   lastScrollY = y;
   const secs = ['sec-2','sec-3','sec-3b','sec-36','sec-4','sec-5','sec-57','sec-6'];
   let cur = '';
@@ -1111,9 +1133,35 @@ const noRes       = document.getElementById('no-res');
 const foundWrap   = document.getElementById('found-wrap');
 const cntFound    = document.getElementById('cnt-found');
 
+let matchedRules = [], matchIdx = -1;
+const snavEl = document.getElementById('snav');
+const snavInfo = document.getElementById('snav-info');
+
+function updateSnav() {
+  snavEl.classList.toggle('show', matchedRules.length > 0);
+  snavInfo.textContent = matchedRules.length ? (matchIdx + 1) + '/' + matchedRules.length : '';
+}
+
+function stepResult(dir) {
+  if (!matchedRules.length) return;
+  matchedRules.forEach(r => r.classList.remove('res-cur'));
+  matchIdx = (matchIdx + dir + matchedRules.length) % matchedRules.length;
+  matchedRules[matchIdx].classList.add('res-cur');
+  matchedRules[matchIdx].scrollIntoView({behavior: 'smooth', block: 'center'});
+  updateSnav();
+}
+
+function clearSearch() {
+  searchEl.value = '';
+  doSearch('');
+  searchEl.blur();
+}
+
 document.addEventListener('keydown', e => {
-  if ((e.ctrlKey||e.metaKey) && e.key==='f') { e.preventDefault(); hdrEl.classList.remove('hdr-up'); searchEl.focus(); searchEl.select(); }
-  if (e.key==='Escape') { searchEl.value=''; doSearch(''); searchEl.blur(); }
+  if ((e.ctrlKey||e.metaKey) && e.key==='f') { e.preventDefault(); setHdr(false); searchEl.focus(); searchEl.select(); }
+  if (e.key==='Escape') { clearSearch(); }
+  if (e.key==='Enter' && document.activeElement === searchEl) { e.preventDefault(); if (e.shiftKey) stepResult(-1); else stepResult(1); }
+  if ((e.key==='ArrowDown'||e.key==='ArrowUp') && document.activeElement === searchEl) { e.preventDefault(); stepResult(e.key==='ArrowDown' ? 1 : -1); }
 });
 searchEl.addEventListener('input', () => doSearch(searchEl.value.trim().toLowerCase()));
 
@@ -1122,8 +1170,10 @@ function getActiveFlt() { return document.querySelector('.flt.active')?.dataset.
 function doSearch(q) {
   const flt = getActiveFlt();
   let found = 0;
+  matchedRules = [];
   rules.forEach(rule => {
     rule.querySelectorAll('mark').forEach(m => m.replaceWith(m.textContent));
+    rule.classList.remove('res-cur');
     const matchFlt = flt === 'all' || (rule.dataset.sev||'').includes(flt);
     if (!q) {
       rule.classList.toggle('hidden', !matchFlt);
@@ -1136,11 +1186,18 @@ function doSearch(q) {
       if (sb) { sb.classList.remove('hidden'); sb.previousElementSibling.classList.add('open'); }
       found++;
       highlightIn(rule, q);
+      matchedRules.push(rule);
     } else { rule.classList.add('hidden'); }
   });
+  matchIdx = matchedRules.length > 0 ? 0 : -1;
+  if (matchedRules.length > 0) {
+    matchedRules[0].classList.add('res-cur');
+    matchedRules[0].scrollIntoView({behavior: 'smooth', block: 'center'});
+  }
   noRes.style.display = (q && found===0) ? 'block' : 'none';
   foundWrap.style.display = q ? 'inline' : 'none';
   cntFound.textContent = found;
+  updateSnav();
 }
 
 function highlightIn(el, q) {
