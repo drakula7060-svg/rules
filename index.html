@@ -160,8 +160,8 @@ mark{background:rgba(176,122,224,0.3);color:var(--accent);border-radius:1px;}
 footer{margin-top:80px;padding:24px 0;border-top:1px solid var(--border-f);text-align:center;font-size:11px;color:rgba(240,230,211,0.18);letter-spacing:2px;}
 footer span{color:rgba(176,122,224,0.35);}
 /* SMART HEADER */
-header{transition:transform .28s ease;}
-header.hdr-up{transform:translateY(-100%);}
+header{transition:top .28s ease;}
+header.hdr-up{top:calc(-1 * var(--hdr) - 2px);}
 
 /* RULE REF TOOLTIP */
 .rref{color:var(--accent);border-bottom:1px dashed rgba(176,122,224,0.5);cursor:help;white-space:nowrap;}
@@ -1066,10 +1066,10 @@ const hdrEl = document.querySelector('header');
 let lastScrollY = 0;
 window.addEventListener('scroll', () => {
   const h = document.documentElement;
-  const y = h.scrollTop;
+  const y = window.scrollY || h.scrollTop;
   prog.style.width = (y / (h.scrollHeight - h.clientHeight) * 100) + '%';
   btt.classList.toggle('show', y > 500);
-  if (y > lastScrollY && y > 120) hdrEl.classList.add('hdr-up');
+  if (y > lastScrollY && y > 80) hdrEl.classList.add('hdr-up');
   else hdrEl.classList.remove('hdr-up');
   lastScrollY = y;
   const secs = ['sec-2','sec-3','sec-3b','sec-36','sec-4','sec-5','sec-57','sec-6'];
