@@ -159,6 +159,23 @@ mark{background:rgba(176,122,224,0.3);color:var(--accent);border-radius:1px;}
 #btt:hover{background:var(--bg-card2);}
 footer{margin-top:80px;padding:24px 0;border-top:1px solid var(--border-f);text-align:center;font-size:11px;color:rgba(240,230,211,0.18);letter-spacing:2px;}
 footer span{color:rgba(176,122,224,0.35);}
+/* SMART HEADER */
+header{transition:transform .28s ease;}
+header.hdr-up{transform:translateY(-100%);}
+
+/* RULE REF TOOLTIP */
+.rref{color:var(--accent);border-bottom:1px dashed rgba(176,122,224,0.5);cursor:help;white-space:nowrap;}
+#rref-tip{display:none;position:fixed;z-index:9500;max-width:460px;background:var(--bg-card2);border:1px solid var(--accent);padding:14px 18px;pointer-events:none;box-shadow:0 8px 40px rgba(0,0,0,0.7);}
+#rref-tip.show{display:block;}
+#rref-tip .rt-num{font-family:var(--H);font-size:13px;color:var(--accent);opacity:.8;margin-bottom:4px;}
+#rref-tip .rt-name{font-family:var(--H);font-size:16px;color:var(--text);margin-bottom:8px;border-bottom:1px solid var(--border-f);padding-bottom:8px;}
+#rref-tip .rt-body{font-size:14px;color:var(--text-dim);line-height:1.65;max-height:160px;overflow:hidden;position:relative;}
+#rref-tip .rt-body::after{content:'';position:absolute;bottom:0;left:0;right:0;height:32px;background:linear-gradient(transparent,var(--bg-card2));}
+
+/* RULE FLASH ON ANCHOR NAV */
+@keyframes rpulse{0%,100%{background:var(--bg-card);border-left-color:transparent;}50%{background:rgba(176,122,224,0.13);border-left-color:var(--accent);}}
+.rule.rflash{animation:rpulse 1.8s ease;}
+
 @media(max-width:960px){.sidebar,.filters{display:none;}}
 @media(max-width:600px){.layout{padding-left:12px;padding-right:12px;}.rule-body{padding-left:0;}.hero{padding:40px 20px 36px;}.hdr-stat,.logo em{display:none;}}
 @media print{body::before,#prog,#btt,header,.sidebar{display:none!important;}.layout{padding-top:0;}.sec-body.hidden,.eg-list{display:block!important;}body{background:#fff;color:#111;}.rule{opacity:1;transform:none;}}
@@ -1045,10 +1062,16 @@ document.getElementById('cnt-6').textContent  = document.querySelectorAll('#sec-
 
 const prog = document.getElementById('prog');
 const btt  = document.getElementById('btt');
+const hdrEl = document.querySelector('header');
+let lastScrollY = 0;
 window.addEventListener('scroll', () => {
   const h = document.documentElement;
-  prog.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
-  btt.classList.toggle('show', h.scrollTop > 500);
+  const y = h.scrollTop;
+  prog.style.width = (y / (h.scrollHeight - h.clientHeight) * 100) + '%';
+  btt.classList.toggle('show', y > 500);
+  if (y > lastScrollY && y > 120) hdrEl.classList.add('hdr-up');
+  else hdrEl.classList.remove('hdr-up');
+  lastScrollY = y;
   const secs = ['sec-2','sec-3','sec-3b','sec-36','sec-4','sec-5','sec-57','sec-6'];
   let cur = '';
   secs.forEach(id => { const el = document.getElementById(id); if (el && el.getBoundingClientRect().top < 100) cur = id; });
@@ -1089,17 +1112,25 @@ const foundWrap   = document.getElementById('found-wrap');
 const cntFound    = document.getElementById('cnt-found');
 
 document.addEventListener('keydown', e => {
-  if ((e.ctrlKey||e.metaKey) && e.key==='f') { e.preventDefault(); searchEl.focus(); searchEl.select(); }
-  if (e.key==='Escape') { searchEl.value=''; doSearch(''); }
+  if ((e.ctrlKey||e.metaKey) && e.key==='f') { e.preventDefault(); hdrEl.classList.remove('hdr-up'); searchEl.focus(); searchEl.select(); }
+  if (e.key==='Escape') { searchEl.value=''; doSearch(''); searchEl.blur(); }
 });
 searchEl.addEventListener('input', () => doSearch(searchEl.value.trim().toLowerCase()));
 
+function getActiveFlt() { return document.querySelector('.flt.active')?.dataset.f || 'all'; }
+
 function doSearch(q) {
+  const flt = getActiveFlt();
   let found = 0;
   rules.forEach(rule => {
     rule.querySelectorAll('mark').forEach(m => m.replaceWith(m.textContent));
-    if (!q) { rule.classList.remove('hidden'); found++; return; }
-    if (rule.textContent.toLowerCase().includes(q)) {
+    const matchFlt = flt === 'all' || (rule.dataset.sev||'').includes(flt);
+    if (!q) {
+      rule.classList.toggle('hidden', !matchFlt);
+      if (matchFlt) found++;
+      return;
+    }
+    if (rule.textContent.toLowerCase().includes(q) && matchFlt) {
       rule.classList.remove('hidden');
       const sb = rule.closest('.sec-body');
       if (sb) { sb.classList.remove('hidden'); sb.previousElementSibling.classList.add('open'); }
@@ -1129,6 +1160,8 @@ document.querySelectorAll('.flt').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.flt').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+    const q = searchEl.value.trim().toLowerCase();
+    if (q) { doSearch(q); return; }
     const f = btn.dataset.f;
     rules.forEach(rule => {
       if (f==='all') { rule.classList.remove('hidden'); return; }
@@ -1140,6 +1173,96 @@ document.querySelectorAll('.flt').forEach(btn => {
     noRes.style.display = vis===0 ? 'block' : 'none';
   });
 });
+
+/* ── FLASH ON ANCHOR NAV ── */
+function flashRule(hash) {
+  if (!hash) return;
+  const el = document.querySelector(hash);
+  if (!el || !el.classList.contains('rule')) return;
+  const sb = el.closest('.sec-body');
+  if (sb && sb.classList.contains('hidden')) {
+    sb.classList.remove('hidden');
+    sb.previousElementSibling?.classList.add('open');
+  }
+  el.classList.add('visible');
+  el.classList.remove('rflash');
+  void el.offsetWidth;
+  el.classList.add('rflash');
+  setTimeout(() => el.classList.remove('rflash'), 2000);
+}
+window.addEventListener('hashchange', () => flashRule(location.hash));
+setTimeout(() => flashRule(location.hash), 300);
+
+/* ── RULE-REF TOOLTIPS ── */
+const rrefTip = document.createElement('div');
+rrefTip.id = 'rref-tip';
+rrefTip.innerHTML = '<div class="rt-num"></div><div class="rt-name"></div><div class="rt-body"></div>';
+document.body.appendChild(rrefTip);
+
+function getRuleByNum(num) {
+  for (const el of document.querySelectorAll('.rule-num')) {
+    if (el.textContent.trim() === num) return el.closest('.rule');
+  }
+  return null;
+}
+
+function initRuleRefs() {
+  const RE = /\b(\d+\.\d+(?:\.\d+)*)\b/g;
+  const walker = document.createTreeWalker(document.querySelector('.main'), NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) {
+    const n = walker.currentNode;
+    const skip = n.parentElement?.closest('.rule-num, .rule-name, .anchor, .badge, .sec-n, .sec-title');
+    if (!skip && RE.test(n.textContent)) nodes.push(n);
+    RE.lastIndex = 0;
+  }
+  nodes.forEach(node => {
+    RE.lastIndex = 0;
+    const text = node.textContent;
+    const frag = document.createDocumentFragment();
+    let last = 0, m;
+    while ((m = RE.exec(text)) !== null) {
+      const rule = getRuleByNum(m[1]);
+      if (!rule) { continue; }
+      frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+      const span = document.createElement('span');
+      span.className = 'rref';
+      span.textContent = m[0];
+      span.dataset.ruleId = rule.id;
+      frag.appendChild(span);
+      last = m.index + m[0].length;
+    }
+    if (last === 0) return;
+    frag.appendChild(document.createTextNode(text.slice(last)));
+    node.parentNode.replaceChild(frag, node);
+  });
+}
+
+document.addEventListener('mouseover', e => {
+  const ref = e.target.closest('.rref');
+  if (!ref) return;
+  const rule = document.getElementById(ref.dataset.ruleId);
+  if (!rule) return;
+  rrefTip.querySelector('.rt-num').textContent = rule.querySelector('.rule-num')?.textContent || '';
+  rrefTip.querySelector('.rt-name').textContent = rule.querySelector('.rule-name')?.textContent || '';
+  const body = rule.querySelector('.rule-body');
+  rrefTip.querySelector('.rt-body').textContent = body ? body.textContent.trim().slice(0, 280) : '';
+  rrefTip.classList.add('show');
+});
+document.addEventListener('mousemove', e => {
+  if (!rrefTip.classList.contains('show')) return;
+  const x = Math.min(e.clientX + 14, window.innerWidth - 480);
+  const y = e.clientY + 18 + rrefTip.offsetHeight > window.innerHeight
+    ? e.clientY - rrefTip.offsetHeight - 10
+    : e.clientY + 18;
+  rrefTip.style.left = x + 'px';
+  rrefTip.style.top  = y + 'px';
+});
+document.addEventListener('mouseout', e => {
+  if (!e.relatedTarget?.closest?.('.rref')) rrefTip.classList.remove('show');
+});
+
+initRuleRefs();
 </script>
 </body>
 </html>
