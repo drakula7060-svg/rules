@@ -59,7 +59,17 @@ header{position:fixed;top:0;left:0;right:0;height:var(--hdr);background:var(--bg
 .layout{display:flex;max-width:1300px;margin:0 auto;padding:calc(var(--hdr) + 28px) 20px 80px;gap:28px;align-items:flex-start;}
 
 /* SIDEBAR */
-.sidebar{width:230px;flex-shrink:0;position:sticky;top:calc(var(--hdr)+16px);max-height:calc(100vh - 90px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+.sidebar{width:230px;flex-shrink:0;position:sticky;top:calc(var(--hdr)+16px);max-height:calc(100vh - 90px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;transition:top .3s cubic-bezier(.4,0,.2,1);}
+.sb-search{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border-f);}
+.sb-search-inp{position:relative;}
+.sb-search-inp .si{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--accent);font-size:15px;pointer-events:none;}
+.sb-search-inp input{width:100%;padding:7px 10px 7px 30px;background:var(--bg-card);border:1px solid var(--border);color:var(--text);font-family:var(--M);font-size:12px;outline:none;box-sizing:border-box;transition:border-color .15s;}
+.sb-search-inp input:focus{border-color:var(--accent);}
+.sb-filters{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
+.sb-filters .flt{font-family:var(--M);font-size:9px;letter-spacing:1px;padding:3px 7px;background:transparent;border:1px solid var(--border-f);color:var(--text-xs);cursor:crosshair;transition:all .15s;text-transform:uppercase;}
+.sb-filters .flt:hover,.sb-filters .flt.active{border-color:var(--accent);color:var(--accent);background:var(--accent-f);}
+.sb-found{font-size:10px;color:var(--text-xs);margin-top:6px;display:none;}
+.sb-found b{color:var(--accent);}
 .sidebar::-webkit-scrollbar{width:3px;}
 .sidebar::-webkit-scrollbar-thumb{background:var(--border);}
 .sb-label{font-size:10px;letter-spacing:3px;color:var(--accent);opacity:.6;padding:0 8px 10px;text-transform:uppercase;border-bottom:1px solid var(--border-f);margin-bottom:10px;}
@@ -194,31 +204,33 @@ header{transition:top .3s cubic-bezier(.4,0,.2,1);}
 
 <header>
   <div class="logo">⬡ OVERCOMING <em>/ КОДЕКС</em></div>
-  <div class="search-wrap">
-    <span class="si">⌕</span>
-    <input id="search" type="text" placeholder="Поиск по правилам... (Ctrl+F)" autocomplete="off" spellcheck="false">
-  </div>
-  <div class="snav" id="snav">
-    <span class="snav-info" id="snav-info"></span>
-    <button class="snav-btn" onclick="stepResult(-1)" title="Предыдущий (Shift+Enter)">↑</button>
-    <button class="snav-btn" onclick="stepResult(1)"  title="Следующий (Enter)">↓</button>
-    <button class="snav-btn snav-close" onclick="clearSearch()" title="Сбросить (Esc)">✕</button>
-  </div>
-  <div class="filters">
-    <button class="flt active" data-f="all">ВСЕ</button>
-    <button class="flt" data-f="warn">ПРЕДУПР.</button>
-    <button class="flt" data-f="ban">БАН</button>
-    <button class="flt" data-f="perm">ПЕРМА</button>
-  </div>
   <div class="hdr-r">
     <div class="hdr-stat">Правил: <b id="cnt">0</b></div>
-    <div class="hdr-found" id="found-wrap">Найдено: <b id="cnt-found">0</b></div>
     <button class="btn-print" onclick="window.print()">⎙ ПЕЧАТЬ</button>
   </div>
 </header>
 
 <div class="layout">
   <nav class="sidebar">
+    <div class="sb-search">
+      <div class="sb-search-inp">
+        <span class="si">⌕</span>
+        <input id="search" type="text" placeholder="Поиск по правилам..." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="snav" id="snav" style="margin-top:6px;">
+        <span class="snav-info" id="snav-info"></span>
+        <button class="snav-btn" onclick="stepResult(-1)" title="Предыдущий (Shift+Enter)">↑</button>
+        <button class="snav-btn" onclick="stepResult(1)"  title="Следующий (Enter)">↓</button>
+        <button class="snav-btn snav-close" onclick="clearSearch()" title="Сбросить (Esc)">✕</button>
+      </div>
+      <div class="sb-filters">
+        <button class="flt active" data-f="all">ВСЕ</button>
+        <button class="flt" data-f="warn">ПРЕДУПР.</button>
+        <button class="flt" data-f="ban">БАН</button>
+        <button class="flt" data-f="perm">ПЕРМА</button>
+      </div>
+      <div class="sb-found" id="found-wrap">Найдено: <b id="cnt-found">0</b></div>
+    </div>
     <div class="sb-label">Навигация</div>
     <a href="#sec-2"   class="sb-link" data-sec="sec-2">  <span class="sb-n">02</span> Термины RP    <span class="sb-cnt" id="cnt-2">0</span></a>
     <a href="#sec-3"   class="sb-link" data-sec="sec-3">  <span class="sb-n">03</span> Осн. правила  <span class="sb-cnt" id="cnt-3">0</span></a>
@@ -1075,15 +1087,17 @@ document.getElementById('cnt-57').textContent = document.querySelectorAll('#sec-
 document.getElementById('cnt-6').textContent  = document.querySelectorAll('#sec-6 .rule').length;
 
 const prog  = document.getElementById('prog');
-const btt   = document.getElementById('btt');
-const hdrEl = document.querySelector('header');
+const btt       = document.getElementById('btt');
+const hdrEl     = document.querySelector('header');
+const sidebarEl = document.querySelector('.sidebar');
 const HDR_H = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hdr')) || 56;
 let lastScrollY = 0, hdrHidden = false;
 
 function setHdr(hide) {
   if (hide === hdrHidden) return;
   hdrHidden = hide;
-  hdrEl.style.top = hide ? (-HDR_H - 2) + 'px' : '0px';
+  hdrEl.style.top     = hide ? (-HDR_H - 2) + 'px' : '0px';
+  sidebarEl.style.top = hide ? '16px' : (HDR_H + 16) + 'px';
 }
 
 window.addEventListener('scroll', () => {
@@ -1195,7 +1209,7 @@ function doSearch(q) {
     matchedRules[0].scrollIntoView({behavior: 'smooth', block: 'center'});
   }
   noRes.style.display = (q && found===0) ? 'block' : 'none';
-  foundWrap.style.display = q ? 'inline' : 'none';
+  foundWrap.style.display = q ? 'block' : 'none';
   cntFound.textContent = found;
   updateSnav();
 }
