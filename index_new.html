@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>КОДЕКС ВЫЖИВАНИЯ — OVERCOMING RP</title>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #0a0a0b;
+  --bg-card:  #0e0e10;
+  --bg-card2: #131316;
+  --bg-glass: rgba(14,14,16,0.92);
+  --text:     #f0e6d3;
+  --text-dim: #c8b99a;
+  --text-xs:  rgba(240,230,211,0.45);
+  --accent:   #b07ae0;
+  --accent-d: rgba(176,122,224,0.18);
+  --accent-f: rgba(176,122,224,0.07);
+  --success:  #34d399;
+  --danger:   #f87171;
+  --amber:    #fbbf24;
+  --border:   rgba(176,122,224,0.18);
+  --border-f: rgba(176,122,224,0.07);
+  --H: 'Russo One', sans-serif;
+  --M: 'Share Tech Mono', monospace;
+  --hdr: 56px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-padding-top:70px;}
+body{background:var(--bg);color:var(--text);font-family:var(--M);cursor:crosshair;min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.055) 2px,rgba(0,0,0,0.055) 4px);pointer-events:none;z-index:9998;}
+#prog{position:fixed;top:0;left:0;height:2px;width:0%;background:linear-gradient(90deg,var(--accent),#d4a0ff);box-shadow:0 0 10px var(--accent);z-index:10000;transition:width .08s linear;}
+
+/* HEADER */
+header{position:fixed;top:0;left:0;right:0;height:var(--hdr);background:var(--bg-glass);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;padding:0 20px;z-index:500;}
+.logo{font-family:var(--H);font-size:16px;color:var(--accent);text-shadow:0 0 16px rgba(176,122,224,0.55);white-space:nowrap;letter-spacing:1px;}
+.logo em{color:var(--text-dim);font-style:normal;font-size:13px;}
+.search-wrap{position:relative;flex:1;max-width:360px;}
+.si{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--accent);font-size:15px;pointer-events:none;}
+#search{width:100%;background:var(--bg-card);border:1px solid var(--border);color:var(--text);font-family:var(--M);font-size:14px;padding:7px 12px 7px 32px;outline:none;cursor:crosshair;transition:border-color .2s,box-shadow .2s;}
+#search:focus{border-color:var(--accent);box-shadow:0 0 12px rgba(176,122,224,0.2);}
+#search::placeholder{color:var(--text-xs);}
+.filters{display:flex;gap:4px;}
+.flt{font-family:var(--M);font-size:10px;letter-spacing:1px;padding:5px 10px;background:transparent;border:1px solid var(--border);color:var(--text-xs);cursor:crosshair;transition:all .15s;white-space:nowrap;}
+.flt:hover{border-color:var(--accent);color:var(--accent);}
+.flt.active{border-color:var(--accent);color:var(--accent);background:var(--accent-d);}
+.flt[data-f="warn"].active{border-color:var(--amber);color:var(--amber);background:rgba(251,191,36,0.12);}
+.flt[data-f="ban"].active{border-color:var(--danger);color:var(--danger);background:rgba(248,113,113,0.1);}
+.flt[data-f="perm"].active{border-color:var(--danger);color:var(--danger);background:rgba(248,113,113,0.18);}
+.hdr-r{margin-left:auto;display:flex;gap:16px;align-items:center;}
+.hdr-stat{font-size:11px;color:var(--text-xs);white-space:nowrap;}
+.hdr-stat b{color:var(--amber);}
+.hdr-found{font-size:11px;color:var(--accent);display:none;}
+.btn-print{font-family:var(--M);font-size:10px;padding:5px 10px;background:transparent;border:1px solid var(--border);color:var(--text-xs);cursor:crosshair;transition:all .15s;}
+.btn-print:hover{border-color:var(--accent);color:var(--accent);}
+
+/* LAYOUT */
+.layout{display:flex;max-width:1300px;margin:0 auto;padding:calc(var(--hdr) + 28px) 20px 80px;gap:28px;align-items:flex-start;}
+
+/* SIDEBAR */
+.sidebar{width:230px;flex-shrink:0;position:sticky;top:calc(var(--hdr)+16px);max-height:calc(100vh - 90px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;transition:top .3s cubic-bezier(.4,0,.2,1);}
+.sb-search{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border-f);}
+.sb-search-inp{position:relative;}
+.sb-search-inp .si{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--accent);font-size:15px;pointer-events:none;}
+.sb-search-inp input{width:100%;padding:7px 10px 7px 30px;background:var(--bg-card);border:1px solid var(--border);color:var(--text);font-family:var(--M);font-size:12px;outline:none;box-sizing:border-box;transition:border-color .15s;}
+.sb-search-inp input:focus{border-color:var(--accent);}
+.sb-filters{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
+.sb-filters .flt{font-family:var(--M);font-size:9px;letter-spacing:1px;padding:3px 7px;background:transparent;border:1px solid var(--border-f);color:var(--text-xs);cursor:crosshair;transition:all .15s;text-transform:uppercase;}
+.sb-filters .flt:hover,.sb-filters .flt.active{border-color:var(--accent);color:var(--accent);background:var(--accent-f);}
+.sb-found{font-size:10px;color:var(--text-xs);margin-top:6px;display:none;}
+.sb-found b{color:var(--accent);}
+.sidebar::-webkit-scrollbar{width:3px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);}
+.sb-label{font-size:10px;letter-spacing:3px;color:var(--accent);opacity:.6;padding:0 8px 10px;text-transform:uppercase;border-bottom:1px solid var(--border-f);margin-bottom:10px;}
+.sb-link{display:flex;align-items:center;gap:8px;padding:6px 8px;font-size:12px;color:rgba(240,230,211,0.45);text-decoration:none;border-left:2px solid transparent;transition:all .15s;line-height:1.3;}
+.sb-link:hover{color:var(--text-dim);background:var(--accent-f);}
+.sb-link.active{color:var(--text);border-left-color:var(--accent);background:var(--accent-f);}
+.sb-n{color:var(--accent);font-size:11px;min-width:24px;opacity:.8;}
+.sb-cnt{margin-left:auto;font-size:10px;color:var(--accent);background:var(--accent-d);padding:1px 5px;}
+.sb-controls{margin-top:16px;padding-top:12px;border-top:1px solid var(--border-f);display:flex;flex-direction:column;gap:4px;}
+.sb-btn{font-family:var(--M);font-size:10px;letter-spacing:1px;padding:6px 8px;background:transparent;border:1px solid var(--border-f);color:var(--text-xs);cursor:crosshair;transition:all .15s;text-align:left;text-transform:uppercase;}
+.sb-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-f);}
+
+/* MAIN */
+.main{flex:1;min-width:0;}
+
+/* HERO */
+.hero{position:relative;text-align:center;padding:60px 32px 48px;margin-bottom:28px;background:var(--bg-card);border:1px solid var(--border);overflow:hidden;}
+.hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 80% 55% at 50% -5%,rgba(176,122,224,0.13) 0%,transparent 65%),radial-gradient(ellipse 50% 30% at 50% 105%,rgba(176,122,224,0.07) 0%,transparent 60%);pointer-events:none;}
+.hud::before,.hud::after{content:'';position:absolute;width:22px;height:22px;border-color:var(--accent);border-style:solid;opacity:.45;}
+.hud::before{top:12px;left:12px;border-width:2px 0 0 2px;}
+.hud::after{bottom:12px;right:12px;border-width:0 2px 2px 0;}
+.hero-label{font-size:10px;letter-spacing:5px;color:var(--accent);opacity:.6;margin-bottom:16px;text-transform:uppercase;}
+.hero-title{font-family:var(--H);font-size:clamp(33px,5.5vw,64px);line-height:1.05;color:var(--text);text-shadow:0 0 40px rgba(176,122,224,0.4);margin-bottom:8px;animation:glitch 7s infinite;}
+@keyframes glitch{0%,91%,100%{text-shadow:0 0 40px rgba(176,122,224,0.4);transform:none;}92%{text-shadow:-3px 0 rgba(248,113,113,0.9),3px 0 rgba(52,211,153,0.9);transform:translateX(2px);}93%{text-shadow:3px 0 rgba(248,113,113,0.9),-3px 0 rgba(52,211,153,0.9);transform:translateX(-2px);}94%{text-shadow:0 0 40px rgba(176,122,224,0.4);transform:none;}}
+.hero-sub{font-family:var(--H);font-size:clamp(14px,2vw,20px);color:var(--accent);opacity:.7;letter-spacing:3px;margin-bottom:32px;}
+.hero-sep{width:100px;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);margin:0 auto 28px;}
+.consent{display:inline-flex;align-items:flex-start;gap:10px;background:rgba(248,113,113,0.07);border:1px solid rgba(248,113,113,0.25);padding:11px 20px;font-size:18px;color:var(--danger);letter-spacing:.5px;line-height:1.6;max-width:640px;text-align:left;}
+
+/* INTRO */
+.intro{padding:28px 0 24px;border-bottom:1px solid var(--border-f);margin-bottom:40px;}
+.intro p{font-size:20px;line-height:1.9;color:var(--text-dim);margin-bottom:10px;}
+.intro p:last-child{margin:0;}
+.intro-sign{margin-top:18px;font-family:var(--H);font-size:20px;color:var(--success);}
+
+/* SECTION */
+.sec{margin-bottom:16px;}
+.sec-hdr{display:flex;align-items:center;gap:16px;padding:14px 20px;background:var(--bg-card);border:1px solid var(--border);border-bottom:none;cursor:crosshair;user-select:none;transition:background .15s;position:relative;}
+.sec-hdr:hover{background:var(--bg-card2);}
+.sec-hdr::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--accent);transition:width .3s;}
+.sec-hdr.open::after{width:100%;}
+.sec-n{font-family:var(--H);font-size:31px;color:var(--accent);opacity:.3;line-height:1;min-width:44px;}
+.sec-title{font-family:var(--H);font-size:clamp(20px,2.5vw,28px);color:var(--text);}
+.sec-info{margin-left:auto;font-size:10px;letter-spacing:2px;color:var(--text-xs);}
+.sec-arr{color:var(--accent);font-size:12px;transition:transform .2s;}
+.sec-hdr:not(.open) .sec-arr{transform:rotate(-90deg);}
+.sec-body{border:1px solid var(--border);border-top:none;}
+.sec-body.hidden{display:none;}
+
+/* RULE */
+.rule{position:relative;padding:16px 20px 14px;margin-bottom:1px;background:var(--bg-card);border-left:2px solid transparent;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s,border-color .2s,background .15s;}
+.rule.visible{opacity:1;transform:none;}
+.rule.hidden{display:none;}
+.rule:hover{border-left-color:rgba(176,122,224,0.35);background:var(--bg-card2);}
+.rule::after{content:'';position:absolute;bottom:0;right:0;width:0;height:0;border:4px solid transparent;border-bottom-color:var(--accent-d);border-right-color:var(--accent-d);}
+.rule-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:7px;flex-wrap:wrap;}
+.rule-num{font-family:var(--H);font-size:15px;color:var(--accent);min-width:56px;padding-top:3px;opacity:.8;}
+.rule-name{font-family:var(--H);font-size:20px;color:var(--text);flex:1;line-height:1.3;}
+.rule-body{padding-left:62px;font-size:20px;line-height:1.9;color:var(--text-dim);}
+
+/* BADGES */
+.badges{display:flex;gap:4px;flex-wrap:wrap;}
+.badge{font-size:13px;letter-spacing:1px;padding:3px 10px;font-family:var(--M);position:relative;cursor:default;}
+.badge:hover .tip{display:block;}
+.tip{display:none;position:absolute;bottom:calc(100% + 6px);right:0;background:var(--bg-card2);border:1px solid var(--border);padding:5px 10px;font-size:13px;color:var(--text-dim);white-space:nowrap;z-index:100;pointer-events:none;}
+.tip::after{content:'';position:absolute;top:100%;right:10px;border:4px solid transparent;border-top-color:var(--border);}
+.bw{background:rgba(251,191,36,0.1);color:var(--amber);border:1px solid rgba(251,191,36,0.3);}
+.bb{background:rgba(248,113,113,0.1);color:var(--danger);border:1px solid rgba(248,113,113,0.3);}
+.bp{background:rgba(248,113,113,0.2);color:var(--danger);border:1px solid var(--danger);}
+.bi{background:rgba(176,122,224,0.1);color:var(--accent);border:1px solid rgba(176,122,224,0.3);}
+.bs{background:rgba(52,211,153,0.08);color:var(--success);border:1px solid rgba(52,211,153,0.3);}
+
+.note{margin-top:8px;padding:9px 14px;background:rgba(176,122,224,0.04);border-left:2px solid rgba(176,122,224,0.35);font-size:17px;color:rgba(240,230,211,0.55);font-style:italic;line-height:1.7;}
+.eg-toggle{margin-top:8px;font-size:15px;color:var(--accent);cursor:crosshair;display:inline-flex;align-items:center;gap:5px;user-select:none;opacity:.75;transition:opacity .15s;}
+.eg-toggle:hover{opacity:1;}
+.eg-list{display:none;margin-top:6px;}
+.eg-list.open{display:block;}
+.eg-label{font-size:10px;letter-spacing:2px;color:var(--text-xs);text-transform:uppercase;margin-bottom:5px;}
+.eg{display:flex;align-items:flex-start;gap:8px;padding:4px 0;font-size:18px;color:rgba(240,230,211,0.5);line-height:1.7;}
+.eg::before{content:'◾️';flex-shrink:0;margin-top:1px;}
+.blk{margin-top:8px;padding:9px 14px;}
+.blk-deny{background:rgba(248,113,113,0.04);border-left:2px solid rgba(248,113,113,0.45);}
+.blk-ok{background:rgba(52,211,153,0.04);border-left:2px solid rgba(52,211,153,0.45);}
+.blk-t{font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.blk-deny .blk-t{color:var(--danger);}
+.blk-ok .blk-t{color:var(--success);}
+.subrule{margin-top:8px;padding:9px 12px;background:var(--accent-f);border:1px solid var(--border-f);}
+.subrule-n{font-size:15px;color:var(--accent);margin-bottom:4px;font-family:var(--H);}
+.subrule-t{font-size:18px;color:rgba(240,230,211,0.6);line-height:1.7;}
+.anchor{position:absolute;top:16px;right:16px;font-size:12px;color:rgba(176,122,224,0.35);cursor:crosshair;opacity:0;transition:opacity .15s,color .15s;text-decoration:none;user-select:none;}
+.rule:hover .anchor{opacity:1;}
+.anchor:hover{color:var(--accent);}
+.anchor.ok{color:var(--success)!important;}
+mark{background:rgba(176,122,224,0.3);color:var(--accent);border-radius:1px;}
+#no-res{display:none;text-align:center;padding:60px;color:var(--text-xs);font-size:14px;}
+#btt{position:fixed;bottom:28px;right:28px;width:40px;height:40px;background:var(--bg-card);border:1px solid var(--border);color:var(--accent);display:flex;align-items:center;justify-content:center;cursor:crosshair;font-size:18px;opacity:0;pointer-events:none;transition:opacity .2s,background .15s;z-index:400;}
+#btt.show{opacity:1;pointer-events:all;}
+#btt:hover{background:var(--bg-card2);}
+footer{margin-top:80px;padding:24px 0;border-top:1px solid var(--border-f);text-align:center;font-size:11px;color:rgba(240,230,211,0.18);letter-spacing:2px;}
+footer span{color:rgba(176,122,224,0.35);}
+header{transition:top .3s cubic-bezier(.4,0,.2,1);}
+.snav{display:none;align-items:center;gap:3px;}
+.snav.show{display:flex;}
+.snav-info{font-size:11px;color:var(--text-xs);min-width:36px;text-align:center;white-space:nowrap;}
+.snav-btn{font-family:var(--M);font-size:13px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--border);color:var(--text-xs);cursor:crosshair;transition:all .15s;flex-shrink:0;}
+.snav-btn:hover{border-color:var(--accent);color:var(--accent);}
+.snav-btn.snav-close{font-size:11px;}
+.rule.res-cur{border-left-color:var(--accent)!important;background:rgba(176,122,224,0.07)!important;}
+.rref{color:var(--accent);border-bottom:1px dashed rgba(176,122,224,0.5);cursor:help;white-space:nowrap;}
+#rref-tip{display:none;position:fixed;z-index:9500;max-width:460px;background:var(--bg-card2);border:1px solid var(--accent);padding:14px 18px;pointer-events:none;box-shadow:0 8px 40px rgba(0,0,0,0.7);}
+#rref-tip.show{display:block;}
+#rref-tip .rt-num{font-family:var(--H);font-size:13px;color:var(--accent);opacity:.8;margin-bottom:4px;}
+#rref-tip .rt-name{font-family:var(--H);font-size:16px;color:var(--text);margin-bottom:8px;border-bottom:1px solid var(--border-f);padding-bottom:8px;}
+#rref-tip .rt-body{font-size:14px;color:var(--text-dim);line-height:1.65;max-height:160px;overflow:hidden;position:relative;}
+#rref-tip .rt-body::after{content:'';position:absolute;bottom:0;left:0;right:0;height:32px;background:linear-gradient(transparent,var(--bg-card2));}
+@keyframes rpulse{0%,100%{background:var(--bg-card);border-left-color:transparent;}50%{background:rgba(176,122,224,0.13);border-left-color:var(--accent);}}
+.rule.rflash{animation:rpulse 1.8s ease;}
+@media(max-width:960px){.sidebar,.filters{display:none;}}
+@media(max-width:600px){.layout{padding-left:12px;padding-right:12px;}.rule-body{padding-left:0;}.hero{padding:40px 20px 36px;}.hdr-stat,.logo em{display:none;}}
+@media print{body::before,#prog,#btt,header,.sidebar{display:none!important;}.layout{padding-top:0;}.sec-body.hidden,.eg-list{display:block!important;}body{background:#fff;color:#111;}.rule{opacity:1;transform:none;}}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+
+<header>
+  <div class="logo">⬡ OVERCOMING <em>/ КОДЕКС</em></div>
+  <div class="hdr-r">
+    <div class="hdr-stat">Правил: <b id="cnt">0</b></div>
+    <button class="btn-print" onclick="window.print()">⎙ ПЕЧАТЬ</button>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar"></nav>
+  <div class="main" id="main">
+    <div class="hero hud">
+      <div class="hero-glow"></div>
+      <div class="hero-label">// OFFICIAL DOCUMENT //</div>
+      <div class="hero-title">КОДЕКС ВЫЖИВАНИЯ</div>
+      <div class="hero-sub">OVERCOMING RP</div>
+      <div class="hero-sep"></div>
+      <div class="consent">⚠ Подключаясь к серверу, вы автоматически соглашаетесь с изложенными правилами. Незнание правил не освобождает от ответственности.</div>
+    </div>
+    <div class="intro">
+      <p>Правила обязательны к прочтению и соблюдению.</p>
+      <p>Администрация имеет право заблокировать игрока при систематическом нарушении правил или при обнаружении действий, наносящих вред серверу, комьюнити или Администрации.</p>
+      <p>При возникновении вопросов руководствуйтесь здравым смыслом и первозданной сутью правил. Не пытайтесь интерпретировать их в угоду своей выгоды.</p>
+      <p>Относитесь к другим членам комьюнити с уважением, а иногда и с терпением.</p>
+      <div class="intro-sign">// Приятной игры, сталкер //</div>
+    </div>
+    <div id="sections-root"></div>
+    <div id="no-res">Ничего не найдено. Попробуйте другой запрос.</div>
+    <footer>OVERCOMING RP <span>///</span> КОДЕКС ВЫЖИВАНИЯ <span>///</span> ВСЕ ПРАВА ЗАЩИЩЕНЫ</footer>
+  </div>
+</div>
+
+<button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+/* ══════════════════════════════════════════════
+   ДАННЫЕ: РАЗДЕЛЫ И ПРАВИЛА
+   Чтобы отредактировать правило — найди нужный
+   объект в массиве RULES и измени поля.
+   
+   Поля объекта правила:
+     id      — уникальный id (строка, без пробелов)
+     sec     — номер раздела (число)
+     num     — номер правила (строка, напр. "2.15" или "4.1–4.5")
+     name    — название правила
+     sev     — серьёзность: "info" | "warn" | "ban" | "perm" | "warn ban" и т.д.
+     body    — основной текст (HTML-строка)
+     badges  — массив бейджей: [{cls, text, tip}]
+               cls: "bi"=инфо, "bw"=предупр, "bb"=бан, "bp"=перма, "bs"=успех
+     note    — примечание (строка, опционально)
+     egs     — примеры [{label, items:[]}] (опционально)
+     deny    — блок "Запрещено" [{text}] (опционально)
+     ok      — блок "Разрешено/Компенсация" [{text}] (опционально)
+     subs    — подправила [{n, t}] (опционально)
+     raw     — если true, body вставляется как чистый HTML без обёртки
+══════════════════════════════════════════════ */
+
+const SECTIONS = [
+  { id:1,  title:'Термины и определения' },
+  { id:2,  title:'Общие правила проекта' },
+  { id:3,  title:'Правила агрессии и предупредительного выстрела' },
+  { id:4,  title:'Пленение / Ограбление / Казнь' },
+  { id:5,  title:'Дезертирство' },
+  { id:6,  title:'Базы, Зелёные Зоны и правила территорий' },
+  { id:7,  title:'Рейды и штурмы' },
+  { id:8,  title:'Война группировок' },
+  { id:9,  title:'Транспорт' },
+  { id:10, title:'Правила RP-рации' },
+  { id:11, title:'Группировки и фракции' },
+  { id:12, title:'Квента и специализации' },
+  { id:13, title:'Ранги' },
+  { id:14, title:'Экзоскелет и Сева / Правила ношения' },
+  { id:15, title:'Правила Техника и Медика' },
+  { id:16, title:'КПК и тайные локации' },
+  { id:17, title:'Правила стримеров' },
+  { id:18, title:'Правила аренды домов и лагерей' },
+  { id:19, title:'Правила взаимодействия с NPC' },
+];
+
+const RULES = [
+
+  // ══ РАЗДЕЛ 1: ТЕРМИНЫ ══
+  { id:'r-11', sec:1, num:'1.1', name:'RolePlay (RP)',
+    sev:'info', badges:[{cls:'bi',text:'ТЕРМИН',tip:'Определение'}],
+    body:'<strong>RolePlay (RP)</strong> — форма интерактивного повествования, в котором участники играют роли в вымышленном мире. Все действия персонажей должны быть логичны и обоснованы в рамках RP-поведения.' },
+
+  { id:'r-12', sec:1, num:'1.2', name:'Leave RP',
+    sev:'ban', badges:[{cls:'bb',text:'БАН',tip:'Нарушение'}],
+    body:'<strong>Leave RP</strong> — целенаправленный уход от RP-ситуации путём выхода из игры или намеренного лишения себя жизни для избежания последствий.',
+    note:'Если выход произошёл вследствие непреодолимой силы (отключение света, плохое самочувствие) — сообщите в соответствующий Discord-канал и вернитесь в RP-ситуацию в ближайшее время.' },
+
+  { id:'r-13', sec:1, num:'1.3', name:'NonRP',
+    sev:'warn', badges:[{cls:'bw',text:'ПРЕДУПР.',tip:'Нарушение'}],
+    body:'<strong>NonRP</strong> — нереалистичное поведение персонажа во время отыгрыша. Поведение должно соответствовать логике и атмосфере игровой вселенной.',
+    note:'RP-Куратор может самостоятельно определять, какие действия являются NonRP.',
+    egs:[{label:'Примеры NonRP', items:[
+      'Многократное необоснованное чередование клавиш Q/E в RP-процессе.',
+      'Использование обращений: "Обратись к богам", "Ожидай высших сил" и т.п.',
+      'Беспричинное связывание/сковывание человека.',
+      'Использование оборудования техника/медика необученным лицом.',
+      'Ношение предметов с клиппингом (накладывающихся друг на друга).',
+      'Переноска вещей, которые логически не поместились бы в карман/рюкзак.',
+      'Трансляция музыки без КПК в руках, нахождения в машине или проигрывателя.',
+      'Использование программ, меняющих голос, без согласования с администрацией.',
+      'Использование анимации "Make it Rain".',
+      'Использование биндов QE-AD.',
+    ]}],
+    subs:[{n:'1.3.1', t:'Запрещены изощрённые оскорбления сексуального характера, призывающие к подобным действиям напрямую. Распространённые косвенные выражения — разрешены. Куратор оставляет за собой право окончательного решения.'}] },
+
+  { id:'r-14', sec:1, num:'1.4', name:'MetaGaming (MG)',
+    sev:'ban', badges:[{cls:'bb',text:'БАН',tip:'Нарушение'}],
+    body:'<strong>MetaGaming</strong> — использование информации, полученной вне игрового процесса, при отыгрыше роли. Вся информация персонажа — только та, что добыта внутриигровым путём. Передача RP-информации через Discord и другие внешние средства также является MG.',
+    note:'Пример: зная из других проектов названия группировок или их лор — ваш персонаж не может знать этого до получения информации RP-путём.' },
+
+  { id:'r-15', sec:1, num:'1.5', name:'PowerGaming (PG)',
+    sev:'warn', badges:[{cls:'bw',text:'ПРЕДУПР.',tip:'Нарушение'}],
+    body:'<strong>PowerGaming</strong> — нереалистичное поведение персонажа: отсутствие страха за жизнь, преувеличение способностей.',
+    note:'Не распространяется на членов фанатичных группировок. При нарушении PG администрация может засчитать RP-смерть.',
+    egs:[{label:'Примеры PG', items:[
+      'Отсутствие страха во время угрозы оружием.',
+      'Намеренное вхождение в аномалию, самоубийство.',
+      'Нападение с ножом на человека с огнестрельным оружием или на сильного мутанта.',
+      'Нереалистичное поведение в плену (сопротивление, отказ отвечать под дулом ствола).',
+      'Попытка сопротивляться группе, превосходящей вас численностью более чем в 2 раза.',
+      'Открытие огня на Зелёной Зоне (исключение: владельцы ЗЗ).',
+      'Агрессивные действия после того, как вас окружил превосходящий противник в бессознательном состоянии.',
+    ]}],
+    subs:[{n:'Примечание о сопротивлении', t:'Двигаясь в одиночку, можно оказать сопротивление группе до трёх человек при уверенности в своих силах. Победили — PG не засчитывается. Погибли — засчитывается RP-смерть.'},{n:'Примечание', t:'Использование функции "воскрешения" во время бессознательного состояния запрещено.'}] },
+
+  { id:'r-16', sec:1, num:'1.6', name:'DM / RDM (Deathmatch / Random Deathmatch)',
+    sev:'ban', badges:[{cls:'bb',text:'БАН',tip:'Нарушение'}],
+    body:'<strong>DM/RDM</strong> — убийство или нанесение урона без веской причины.',
+    deny:[
+      'Убийство за словесные оскорбления (без оскорбления родных/религии).',
+      'Нанесение урона кулаками (2+ удара), прикладом или иными предметами без должной причины.',
+      'Убийство, мотивированное мета-дружбой или внеигровыми конфликтами.',
+      'Наезд на человека со смертельным исходом (кроме намеренного игнорирования движущегося ТС).',
+      'Применение оружия на территории Зелёных Зон. Любая провокация в ЗЗ — также RDM.',
+    ],
+    ok:[
+      'Убийство в ответ на оскорбление родных, близких родственников или религии.',
+      'Убийство в случае защиты своего имущества (при наличии доказательств владения).',
+      'Убийство вора при безуспешной попытке поимки (с доказательствами).',
+      'Убийство в ответ на провокацию или угрозу жизни (прицеливание, угроза, жесты — см. п. 3.5).',
+      '<strong>Право мести за ограбление</strong>: если вас ограбили, но не убили — право на месть группировке-грабителю (до первой победы, с доказательствами). Только при грабеже Бандитами, Ренегатами или одиночкой с квентой «Грабитель».',
+    ] },
+
+  { id:'r-17', sec:1, num:'1.7', name:'RPK (RP-смерть)',
+    sev:'perm', badges:[{cls:'bp',text:'RPK',tip:'Смерть персонажа'}],
+    body:'<strong>RPK</strong> — смерть RP-персонажа, после которой теряются все знания о Зоне, знакомства и навыки. При получении RPK необходимо сменить ник и начать заново.',
+    note:'Добровольная отправка на Большую Землю не является RP-смертью. При добровольном уходе из Зоны вернуть персонажа можно только спустя 14 дней.' },
+
+  { id:'r-18', sec:1, num:'1.8', name:'Abuse',
+    sev:'ban', badges:[{cls:'bb',text:'БАН',tip:'Нарушение'}],
+    body:'<strong>Abuse</strong> — использование уязвимостей игры и/или правил для получения преимущества.',
+    egs:[{label:'Примеры Abuse', items:[
+      'Abuse игровой механики, мешающей мутантам нанести урон; давить мутантов техникой — запрещено.',
+      'Abuse анимации — сбивание/поломка анимации (бег спиной с обычной скоростью и др.).',
+      'Abuse маппинга — просмотр сквозь стены, стрельба через разделяющие заборы, укрытие в текстурах.',
+      'Abuse транспорта — визуально открытые двери, но транспорт заблокирован и недоступен для обыска.',
+      'Abuse правил — трактование правил в свою сторону для избежания наказания.',
+      'Использование нелогичных предметов/способов для подъёма на возвышенность.',
+    ]}],
+    note:'При обнаружении уязвимостей — сообщите администрации.' },
+
+  { id:'r-19', sec:1, num:'1.9', name:'New Life Rule (NLR)',
+    sev:'info', badges:[{cls:'bi',text:'ПРАВИЛО',tip:'Обязательно'}],
+    body:'<strong>NLR</strong> — «Правило новой жизни». При гибели (любая смерть кроме RPK) отыгрывается «тяжёлое ранение» с потерей памяти с момента выхода из последней Зелёной Зоны / базы группировки. <strong>Время отыгрыша — 15 минут.</strong>',
+    deny:[
+      'Покидать безопасное место (склад ГП / комната трейдера / Деревня Новичков).',
+      'Выходить на RP-рацию.',
+      'Возвращаться на место смерти/боя за лутом или для продолжения RP/перестрелки.',
+    ],
+    note:'По истечении 15 минут все ограничения снимаются. Возвращаться на место смерти — только при наличии RP-информации.' },
+
+  { id:'r-110', sec:1, num:'1.10', name:'Красная Зона (КЗ)',
+    sev:'info', badges:[{cls:'bi',text:'ТЕРМИН',tip:'Зона боя'}],
+    body:'<strong>Красная Зона</strong> — область вооружённого столкновения радиусом ~300 метров. КЗ открывается при открытии огня на поражение (предупредительный выстрел — исключение) и закрывается через 5 минут после последнего убийства.',
+    subs:[
+      {n:'1.10.2', t:'В КЗ основные правила RDM не действуют (при условии нахождения обоих в радиусе КЗ). Рекомендуется руководствоваться RP-логикой и ЛОРом.'},
+      {n:'1.10.3', t:'После рестарта/краша сервера запрещено проявлять агрессию, начинать/продолжать перестрелку и менять позиции в течение времени по п. 1.15. Исключение: продолжение RP-процесса.'},
+      {n:'1.10.4', t:'Запрещено подключаться к серверу, если персонаж находится в КЗ, до её закрытия.'},
+      {n:'1.10.5', t:'На автоматическом ивенте с падением вертолёта действует КЗ радиусом 300м с момента уведомления о падении до уведомления об окончании ивента.'},
+    ] },
+
+  { id:'r-111', sec:1, num:'1.11', name:'Мета-бойцы',
+    sev:'info', badges:[{cls:'bi',text:'ТЕРМИН',tip:'НПС-охрана'}],
+    body:'<strong>Мета-бойцы</strong> — вымышленные бойцы, осуществляющие охрану баз группировок и нейтральных зон. На каждой базе и нейтральной зоне находятся мета-бойцы, обеспечивающие безопасность территории.' },
+
+  { id:'r-112', sec:1, num:'1.12', name:'Зелёная Зона (ЗЗ)',
+    sev:'info', badges:[{cls:'bi',text:'ТЕРМИН',tip:'Безопасная зона'}],
+    body:'<strong>Зелёная Зона</strong> — территория под защитой мета-бойцов, на которую не распространяется Красная Зона (пока она закрыта). <strong>Особая ЗЗ — ПГТ Рябиново:</strong> единственная территория вне ЧЗО, где запрещено любое оружие, кроме заточки (исключение: Полиция).',
+    subs:[
+      {n:'1.12.1', t:'На территории ЗЗ запрещены любые провокации и агрессивные действия.'},
+      {n:'1.12.1.1', t:'На Деревне Новичков запрещены кулачные бои и нанесение урона игрокам, даже в ответ на провокации (исключение: оскорбление родных или религии).'},
+      {n:'1.12.1.2', t:'На ЗЗ Бара запрещено любое нанесение урона (исключение: кулачные бои / оскорбление родных или религии).'},
+      {n:'1.12.2', t:'Агрессия из ЗЗ в вашу сторону, когда вы вне неё, даёт право нейтрализовать только провокатора, не заходя на ЗЗ. ЗЗ при этом не открывается.'},
+      {n:'1.12.3', t:'Агрессия из ЗЗ, когда вы оба на ней, даёт право на кулачный бой до потери сознания/капитуляции. Продолжение удара по сдающемуся/потерявшему сознание = DM. Начинать бой с владельцем ЗЗ — только с его согласия.'},
+      {n:'1.12.3.1', t:'В кулачном бою участвуют только двое. Если агрессия от группы — участвует только один. Любое вмешательство = DM.'},
+      {n:'1.12.4', t:'Все базы, лагеря и Бары подчиняются правилам контролирующей ГП. Владельцы имеют право наказывать нарушителей соизмеримо нарушению.'},
+    ] },
+
+  { id:'r-113', sec:1, num:'1.13', name:'Антикемп Зона',
+    sev:'perm', badges:[{cls:'bp',text:'RPK',tip:'Смерть при нарушении'}],
+    body:'<strong>Антикемп Зона</strong> — условная зона вблизи базы. Граница: забор и ~100 метров от него. Действует при активных мета-бойцах (см. п. 1.14).',
+    subs:[
+      {n:'1.13.1', t:'Лица в состоянии войны с владельцами антикемпа, находясь в нём более 10 секунд при закрытой ЗЗ — получают RPK (без исключений).'},
+      {n:'1.13.2', t:'При нейтралитете/союзе, если вас просят покинуть антикемп — 15 секунд, после — RPK (при активных мета-бойцах).'},
+      {n:'1.13.3', t:'Группа, первой проявившая агрессию в антикемпе, при открытии КЗ и смерти до её закрытия — получает RPK.'},
+      {n:'1.13.4', t:'Если сталкер стал целью агрессии в антикемпе, но не открыл ответный огонь и отступил в ЗЗ — ЗЗ не открывается, мета-бойцы остаются активными. Требовать вывести такого игрока нельзя.'},
+    ] },
+
+  { id:'r-114', sec:1, num:'1.14', name:'Открытие Зелёной Зоны',
+    sev:'warn', badges:[{cls:'bw',text:'ПРАВИЛО',tip:'Механика открытия ЗЗ'}],
+    body:'<strong>Открытие ЗЗ</strong> — отключение мета-бойцов на 10 минут. В течение этого времени к находящимся на ЗЗ применяются правила КЗ.',
+    note:'Если вы зашли на ЗЗ при активных мета-бойцах — никакие действия владельцев по отношению к вам ЗЗ не открывают.',
+    subs:[
+      {n:'1.14.2', t:'Если владельцы ЗЗ открыли огонь из ЗЗ/Антикемпа по вам, когда вы вне их ЗЗ/антикемпа — ЗЗ считается открытой.'},
+      {n:'1.14.3', t:'Если не-владельцы ЗЗ открыли по вам огонь из ЗЗ/антикемпа — вы вправе ответить. ЗЗ при этом не открывается.'},
+      {n:'1.14.4', t:'Если агрессоры прячутся в ЗЗ — дайте 5 минут владельцам выгнать их. Если по истечении времени агрессоры не ушли — ЗЗ открыта на 10 минут.'},
+      {n:'1.14.5', t:'Пострадавшая сторона в период ожидания обязана находиться вне антикемпа.'},
+      {n:'1.14.6', t:'Во время открытия ЗЗ обороняющиеся обязаны открыть все двери, кроме двери к телепорту на мета-склад. Арендованные дома/лагеря не открываются (см. п. 18.1).'},
+      {n:'1.14.7', t:'Если за 10 минут после открытия ЗЗ ни одна из сторон не предпринимает активных действий — атакующие обязаны покинуть локацию и не возвращаться 2 часа.'},
+    ] },
+
+  { id:'r-115', sec:1, num:'1.15', name:'Рестарт',
+    sev:'info', badges:[{cls:'bi',text:'ПРАВИЛО',tip:'Время после рестарта'}],
+    body:'<strong>Рестарт</strong> — перезапуск сервера по расписанию или ввиду непредвиденных обстоятельств.',
+    subs:[
+      {n:'1.15.1', t:'После планового рестарта — агрессию можно проявлять через 10 минут после официального времени рестарта.'},
+      {n:'1.15.2', t:'После внепланового рестарта/краша — через 10 минут после открытия сервера для подключения.'},
+    ] },
+
+  { id:'r-116', sec:1, num:'1.16', name:'Team Kill (TK)',
+    sev:'ban', badges:[{cls:'bb',text:'БАН',tip:'Нарушение'}],
+    body:'<strong>Team Kill</strong> — умышленное убийство/нанесение урона члену своей группировки. Нарушение, портящее RP-атмосферу.',
+    note:'Исключение: обоснованное подозрение в предательстве.' },
+
+  { id:'r-117', sec:1, num:'1.17', name:'Spawn Kill (SK)',
+    sev:'ban', badges:[{cls:'bb',text:'БАН',tip:'= RDM'}],
+    body:'<strong>Spawn Kill</strong> — убийство или попытка убийства, а также кемпинг с целью ограбления/пленения на месте появления после входа в игру или телепортации. Запрещено кемпить входы и выходы телепортов в радиусе 150–200 метров. Приравнивается к RDM.',
+    note:'Пример: поджидать игрока у входа в лабораторию и грабить его в момент прогрузки — строгое нарушение. Оставляйте другим игрокам шанс для манёвра.' },
+
+  { id:'r-118', sec:1, num:'1.18', name:'AFK (Away From Keyboard)',
+    sev:'warn', badges:[{cls:'bw',text:'ПРЕДУПР.',tip:'Нарушение атмосферы'}],
+    body:'<strong>AFK</strong> — отсутствие контроля над персонажем, пока тот находится в игре. Нарушает RP-атмосферу и подвергает персонажа необоснованному риску.' },
+
+  { id:'r-119', sec:1, num:'1.19', name:'Rule Abuse (RA)',
+    sev:'ban', badges:[{cls:'bb',text:'БАН',tip:'Нарушение'}],
+    body:'<strong>Rule Abuse</strong> — использование несовершенств правил для получения собственной выгоды.',
+    note:'Игроки, намеренно обходящие правила, интерпретирующие их в свою сторону или скрывающие информацию о нарушениях — будут наказываться администрацией.' },
+
+  { id:'r-120', sec:1, num:'1.20', name:'RMT (Real Money Trade)',
+    sev:'perm', badges:[{cls:'bp',text:'ПЕРМА-БАН',tip:'Торговля за реальные деньги'}],
+    body:'<strong>RMT</strong> — торговля внутриигровыми предметами за реальные деньги. Запрещено продавать предметы, транспорт, достижения или что-либо иное за реальную валюту.',
+    note:'При наличии доказательств факта купли-продажи — сообщите администрации. Подтверждённая информация будет вознаграждена.' },
+
+  // ══ РАЗДЕЛ 2: ОБЩИЕ ПРАВИЛА ══
+  { id:'r-21', sec:2, num:'2.1', name:'Соблюдение ролей',
+    sev:'info', badges:[{cls:'bi',text:'ОБЯЗАТЕЛЬНО',tip:'Требование'}],
+    body:'Все игроки обязаны соблюдать роли и придерживаться выбранных персонажей, использовать соответствующий стиль общения в рамках отыгрыша персонажа и/или соблюдения лора группировки.' },
+
+  { id:'r-22', sec:2, num:'2.2–2.9', name:'Поведение и общение',
+    sev:'ban', badges:[{cls:'bb',text:'БАН',tip:'Серьёзные нарушения'}],
+    body:'Игроки должны знать и учитывать особенности тематики игровой вселенной.',
+    deny:[
+      '2.3 — Любые действия, наносящие вред комьюнити, проекту или администрации. Оскорбления с сексуальным подтекстом, оскорбление родных и близких — до перманентной блокировки. Исключение: словесная перепалка в RP (оскорбление персонажа, не игрока).',
+      '2.4 — Решать конфликты между персонажами с использованием реальной агрессии и оскорблений.',
+      '2.5 — Сленг, не соответствующий году на сервере и/или атмосфере S.T.A.L.K.E.R.',
+      '2.6 — Полностью игнорировать игроков. Обязателен минимальный RP-процесс (хотя бы «Не до тебя, сталкер»). Игнорирование = NonRP.',
+      '2.7 — Действия сексуального характера.',
+      '2.8 — Реклама сторонних проектов.',
+      '2.9 — Обсуждение политики, пропаганда наркотиков, фашизма, нацизма, экстремизма, провокационные действия на разжигание розни.',
+    ] },
+
+  { id:'r-210', sec:2, num:'2.10–2.15', name:'Никнейм и идентификация',
+    sev:'warn', badges:[{cls:'bw',text:'ПРЕДУПР.',tip:'Нарушение'}],
+    body:'Игровой ник должен быть читаемым, соответствовать атмосфере RP и совпадать с никнеймом на Discord-сервере. Формат: <strong>[Приписка ГП] [Ник латиницей]</strong>.',
+    subs:[
+      {n:'2.11', t:'Запрещены никнеймы с нецензурной лексикой или оскорбляющие членов комьюнити.'},
+      {n:'2.12', t:'Запрещено использовать ники администрации сервера.'},
+      {n:'2.13', t:'Запрещено представляться другим позывным, если ваше лицо видели без маски.'},
+      {n:'2.14', t:'Игровое имя персонажа должно соответствовать лору ГП или сеттингу сталкера. Имя в КПК должно совпадать с именем персонажа.'},
+      {n:'2.15', t:'Аватар в КПК должен соответствовать группировке игрока.'},
+    ] },
+
+  { id:'r-216', sec:2, num:'2.16–2.20', name:'Discord и голосовая связь',
+    sev:'ban', badges:[{cls:'bb',text:'БАН',tip:'Нарушение'}],
+    body:'Во время игры — находиться в канале «Зона» или RP-частоте в Discord проекта. НонРП-каналы — только на складе ГП или при отсутствии на сервере.',
+    deny:[
+      '2.18 — Плагины и аддоны с преимуществом или доступом к закрытым каналам Discord.',
+      '2.19 — Voice Morph / Soundpad без согласования с администрацией.',
+    ],
+    note:'2.20 — При вылете во время RP-ситуации — написать в канал «RP-вылет» в Discord.' },
+
+  { id:'r-221', sec:2, num:'2.21–2.27', name:'Читы, сторонние программы и уязвимости',
+    sev:'perm', badges:[{cls:'bp',text:'ПЕРМА-БАН',tip:'Без обжалования'}],
+    body:'Запрещено использование читов, скриптов, стороннего ПО для получения преимущества. Запрещены фильтры и скрипты, отключающие прорисовку травы/предметов/окружения.',
+    note:'Разрешены светофильтры (яркость/насыщенность) и программы с точкой в центре экрана. Блокировки за читы не обжалуются. Администрация вправе проверить ПК — отказ или выход во время проверки = наличие стороннего ПО.',
+    subs:[
+      {n:'2.24', t:'Запрещено использование багов игры, недоработок сервера. При обнаружении — сообщите администрации.'},
+      {n:'2.25', t:'Запрещено трактовать правила в свою сторону. При обнаружении несовершенств — сообщите администрации.'},
+      {n:'2.26', t:'Запрещено скрывать и распространять уязвимости системы.'},
+      {n:'2.27', t:'Запрещено изменять конфигурационные файлы игры вручную или через сторонние программы.'},
+    ] },
+
+  { id:'r-228', sec:2, num:'2.28–2.33', name:'Аккаунты и блокировки',
+    sev:'perm', badges:[{cls:'bp',text:'ПЕРМА-БАН',tip:'Нарушение'}],
+    body:'Запрещён мультиаккаунт в игре и Discord. Обход блокировки, продажа/передача/взлом аккаунта — перманентный бан. Обман администрации — перманентный бан. Выдавать себя за администратора — запрещено.',
+    subs:[
+      {n:'2.32', t:'При трёх предупреждениях — блокировка и собеседование на знание правил.'},
+      {n:'2.33', t:'Администрация может выдать бан без проверки при наличии публичных банов за читы на других проектах.'},
+    ] },
+
+  { id:'r-234', sec:2, num:'2.34–2.41', name:'Игровой процесс',
+    sev:'info', badges:[{cls:'bi',text:'ПРАВИЛО',tip:'Общие условия'}],
+    body:'Время в Зоне идёт иначе — смена дня и ночи не соответствует реальному миру. Выход вне безопасного места — на свой страх и риск. Переломы и смерти отыгрываются как вывихи/тяжёлые ранения.',
+    deny:[
+      '2.37 — Выходить из игры в бессознательном состоянии (риск RPK).',
+      '2.38 — Использовать краш/рестарт для сближения с противниками.',
+      '2.39 — Свод RP к PVP. Если была возможность открыть огонь сразу, но начали RP — нельзя резко стрелять без весомой причины. Исключение: после предупредительного выстрела.',
+      '2.40 — Использовать гранаты как ловушки, растяжки или устанавливать их на поверхностях.',
+      '2.41 — Ставить фурнитуру вне складов ГП (только владельцам ЗЗ) и купленных домов/лагерей.',
+    ] },
+
+  { id:'r-242', sec:2, num:'2.42–2.43', name:'Шевроны и форма',
+    sev:'warn', badges:[{cls:'bw',text:'ПРЕДУПР.',tip:'Нарушение'}],
+    body:'Каждый сталкер обязан носить шеврон группировки.',
+    note:'Одиночки, Ренегаты и Наёмники могут носить снаряжение других ГП, но это может стать основанием для наказания от пострадавшей ГП. Использование формы противника во время «Войны группировок» может повлечь RPK.' },
+
+  { id:'r-244', sec:2, num:'2.44', name:'Снятие вещей с трупов',
+    sev:'info', badges:[{cls:'bi',text:'ПРАВИЛО',tip:'Условие'}],
+    body:'Разрешено снимать с трупов всё, кроме технически сложных костюмов (Сева, Экзоскелет, Экзоскелет «Панцирь») — их снимает только техник.',
+    note:'С трупов членов группировки «Монолит» запрещено снимать шевроны, одежду, обувь, маски, бронежилеты и шлемы (повышенный радиационный фон).' },
+
+  { id:'r-245', sec:2, num:'2.45–2.49', name:'Доказательства и жалобы',
+    sev:'info', badges:[{cls:'bi',text:'ПРАВИЛО',tip:'Сроки'}],
+    body:'Жалоба подаётся в течение <span style="color:var(--amber)">24 часов</span> с момента нарушения. Важная RP-информация должна быть подкреплена видеодоказательствами. Откаты записываются со звуком игры и микрофона.',
+    deny:[
+      '2.48 — Удалять доказательства нарушения в течение 48 часов после подачи жалобы.',
+      '2.49 — Безосновательные обвинения в адрес администрации = клевета и блокировка.',
+    ] },
+
+  { id:'r-250', sec:2, num:'2.50–2.51', name:'Фото и видеофиксация RP',
+    sev:'info', badges:[{cls:'bi',text:'ПРАВИЛО',tip:'Требование'}],
+    body:'Фото/видеофиксация RP-информации действительна только при использовании внутриигрового фотоаппарата или КПК. КПК не записывает фото/видео/голос. По фотографии лица без маски/противогаза можно опознать личность.' },
+
+  { id:'r-252', sec:2, num:'2.52', name:'Текстовый чат в RP',
+    sev:'info', badges:[{cls:'bi',text:'ПРАВИЛО',tip:'Условие'}],
+    body:'При невозможности использовать голосовой чат — пишите в текстовый (Enter) только при отыгрыше передачи информации через КПК, бумагу или иной предмет. Без отыгрыша текст не виден другим — иначе NonRP.' },
+
+  { id:'r-253', sec:2, num:'2.53–2.57', name:'Прочие общие правила',
+    sev:'info', badges:[{cls:'bi',text:'ПРАВИЛО',tip:'Разное'}],
+    body:'Кураторы (начиная с младшего) могут наблюдать за RP-ситуациями и заходить на RP-рации. Администрация обязана оповещать о любых изменениях в правилах.',
+    deny:[
+      '2.55 — Нанесение вреда экономике сервера.',
+      '2.56 — Использование/распространение личных данных участников без их согласия.',
+      '2.57 — Кемпинг входов и выходов телепортов в данжи/лаборатории в радиусе 150–200 метров.',
+    ] },
+
+  // ══ РАЗДЕЛ 3: АГРЕССИЯ ══
+  { id:'r-31', sec:3, num:'3.1', name:'Предупредительный выстрел',
+    sev:'warn', badges:[{cls:'bw',text:'ПРАВИЛО',tip:'Условие'}],
+    body:'Одиночный выстрел под ноги или в объекты рядом с игроком, с любого оружия <strong>без глушителя, кроме дробовиков</strong>, с дистанции не более <span style="color:var(--amber)">75 метров</span>. После выстрела — подойти и выдвинуть условия.' },
+
+  { id:'r-32', sec:3, num:'3.2', name:'Предупреждение = агрессия',
+    sev:'warn', badges:[{cls:'bw',text:'ПРАВИЛО',tip:'Условие'}],
+    body:'Предупредительный выстрел и/или предупреждение голосом считается агрессией. После его проявления противоположная сторона вправе открывать ответный огонь.' },
+
+  { id:'r-33', sec:3, num:'3.3', name:'Повторное предупреждение',
+    sev:'warn', badges:[{cls:'bw',text:'ПРАВИЛО',tip:'Условие'}],
+    body:'Если после первого предупреждения игрок не понял, что оно адресовано ему — необходимо второе с интервалом 3 секунды.',
+    subs:[{n:'3.3.1', t:'Если игрок понял, что предупреждение адресовано ему, и начинает убегать — разрешено открыть огонь.'}] },
+
+  { id:'r-34', sec:3, num:'3.4', name:'Предупреждение голосом',
+    sev:'warn', badges:[{cls:'bw',text:'ПРАВИЛО',tip:'Условие'}],
+    body:'Выкрик с требованиями (сложить оружие, сдаться) с обязательным озвучиванием последствий, не более чем с <span style="color:var(--amber)">50 метров</span>.',
+    note:'При предупреждении голосом можно дать выстрел под ноги для уточнения адресата (любое огнестрельное, кроме дробовиков).' },
+
+  { id:'r-35', sec:3, num:'3.5', name:'Основания для открытия огня',
+    sev:'warn', badges:[{cls:'bw',text:'ПРАВИЛО',tip:'Условия'}],
+    body:'Следующие действия — основания для немедленного открытия огня:',
+    egs:[{label:'Список', items:[
+      '<strong>Прицеливание в вас или вашу группу</strong> — целенаправленное направление оружия.',
+      '<strong>Приказы бросить оружие</strong> вне сталкерских лагерей, баз и нейтральных баров.',
+      '<strong>Прямые оскорбления / явная угроза жизни</strong> в отношении вас или спутников.',
+      '<strong>Удары оружием ближнего боя / рукопашный бой.</strong>',
+      '<strong>Предупредительный выстрел в вашу сторону.</strong>',
+    ]}] },
+
+  { id:'r-36', sec:3, num:'3.6', name:'НЕ являются основанием для огня',
+    sev:'info', badges:[{cls:'bi',text:'ПРАВИЛО',tip:'Условие'}],
+    body:'Следующие действия не являются основанием для немедленного открытия огня, но могут перерасти в перестрелку: просьба убрать оружие, мародёрство, воровство, оскорбления без угрозы жизни, фотографирование, блокирование проезда.',
+    note:'Инициатор агрессии обязан иметь видеофиксацию происходящего.' },
+
+  { id:'r-37', sec:3, num:'3.7–3.9', name:'Предупредительный выстрел по автомобилю',
+    sev:'ban', badges:[{cls:'bb',text:'БАН',tip:'Случайное попадание = RDM'}],
+    body:'Выстрел перед автомобилем или по колёсам. Случайное попадание по людям в машине = RDM стрелку. Дистанция — <span style="color:var(--amber)">50–100 метров</span>. Разрешено несколько одновременных выстрелов. Если водитель не сбавляет скорость — разрешён автоматический огонь до остановки/смерти водителя.' },
+
+  { id:'r-310', sec:3, num:'3.10–3.11', name:'Стрельба по вертолётам',
+    sev:'info', badges:[{cls:'bi',text:'ПРАВИЛО',tip:'Условие'}],
+    body:'Предупредительный выстрел по вертолёту в полёте не даётся (исключение: начало взлёта, посадка).',
+    egs:[{label:'Основания для огня по вертолёту', items:[
+      'Точная подтверждённая информация, что это вертолёт вражеской ГП.',
+      'Вертолёт пролетает над вашей ЗЗ без разрешения (только для ГП, не для нейтральных ЗЗ).',
+      'Вертолёт или его экипаж открыл огонь по вам.',
+      'Военные (С.О.П) могут открывать огонь по любым вертолётам, о которых их не проинформировал ШТАБ.',
+      'Фанатичные группировки могут открывать огонь в любом случае.',
+    ]}],
+    subs:[{n:'3.11.1', t:'При крушении вертолёта КЗ не открывается. Дальнейшее взаимодействие с экипажем — по правилам предупредительного выстрела (п. 3.1–3.4). Исключение: Война.'}] },
+
+  { id:'r-312', sec:3, num:'3.12–3.13', name:'Доказательства агрессии',
+    sev:'info', badges:[{cls:'bi',text:'ОБЯЗАТЕЛЬНО',tip:'Требование'}],
+    body:'Инициатор агрессии обязан иметь видеофиксацию происходящего. Необходимо хранить откат предупредительного выстрела и дальнейшего развития ситуации.' },
+
+  // ══ РАЗДЕЛ 4: ПЛЕНЕНИЕ / ОГРАБЛЕНИЕ / КАЗНЬ ══
+  { id:'r-41', sec:4, num:'4.1', name:'Начало пленения',
+    sev:'warn', badges:[{cls:'bi',text:'ПРАВИЛО',tip:'Условие'}],
+    body:'Пленение начинается с момента полной капитуляции (убрали оружие за спину/положили на землю или подняли руки).',
+    note:'Во время активной КЗ статус пленного начинается с момента, когда ему свяжут руки.' },
+
+  { id:'r-42', sec:4, num:'4.2', name:'Условия для пленения',
+    sev:'warn', badges:[{cls:'bw',text:'ПРЕДУПР.',tip:'Нарушение'}],
+    body:'Для пленения нужна весомая RP-причина (шпионаж, саботаж, 2+ вооружённых столкновения с ГП и т.д.), подтверждённая видеофиксацией.' },
+
+  { id:'r-43', sec:4, num:'4.3–4.5', name:'Обязанности пленившей стороны',
+    sev:'warn', badges:[{cls:'bw',text:'ПРЕДУПР.',tip:'Нарушение = предупреждение'}],
+    body:'Пленившая сторона обязана: поддерживать здоровье пленника, отыгрывать с ним активное RP, выдвинуть требования в течение <span style="color:var(--amber)">1 часа</span>.',
+    subs:[{n:'4.3.1', t:'Активным RP НЕ является: шаблонные вопросы о состоянии, простое наблюдение, длительное молчание. Если нет активного RP 25 минут — пленник вправе обратиться к администрации для возврата на базу.'}] },
+
+  { id:'r-46', sec:4, num:'4.6–4.11', name:'Время плена и выкуп',
+    sev:'info', badges:[{cls:'bi',text:'ПРАВИЛО',tip:'Условия'}],
+    body:'Пленный отыгрывает на сервере не менее <span style="color:var(--amber)">4 часов</span> при онлайне от 1 бойца ГП. Время на выкуп — минимум <span style="color:var(--amber)">24 часа</span>.',
+    egs:[{label:'Стоимость выкупа', items:[
+      'Сталкер/повязка — <strong>50 000 руб.</strong>',
+      'Боец группировки — <strong>100 000 руб.</strong>',
+      'Заместитель лидера — <strong>150 000 руб.</strong>',
+      'Лидер группировки — <strong>250 000 руб.</strong>',
+    ]}],
+    note:'При нескольких пленных стоимость суммируется. Возможен выкуп амуницией (согласование с куратором). Зелёный коридор: переговорщиков нельзя пленять — только при провокации с их стороны.' },
+
+  { id:'r-412', sec:4, num:'4.12–4.17', name:'Связывание и побег',
+    sev:'warn', badges:[{cls:'bw',text:'ПРЕДУПР.',tip:'Нарушение'}],
+    body:'Пленный не связан дольше <span style="color:var(--amber)">30 минут</span>. Связывание — только когда повёрнут спиной. Обыскивать может только один человек. Запрещено связывать без RP-оснований.',
+    subs:[{n:'4.16', t:'Снять наручники самостоятельно — только когда пленители не видят. При самостоятельном снятии: вывих лучезапястных суставов на 25 минут (нельзя оружие, удары, лестница). Верёвку снять — только отыграв RP.'}] },
+
+  { id:'r-418', sec:4, num:'4.18–4.19', name:'Неудачный побег',
+    sev:'perm', badges:[{cls:'bp',text:'RPK',tip:'RP-смерть при неудаче'}],
+    body:'Неудачная попытка бегства = PG + RP-смерть. Самовольный побег — только когда пленители не видят, с видеофиксацией. Если убит при попытке — засчитывается RP-смерть.' },
+
+  { id:'r-420', sec:4, num:'4.20–4.24', name:'Ограбление',
+    sev:'warn', badges:[{cls:'bw',text:'ПРЕДУПР.',tip:'Нарушение = предупреждение/бан'}],
+    body:'Грабежами промышляют «Бандиты». Одиночке — нужна квента Грабителя и ранг не ниже «Опытный». Запрещены грабежи на Кордоне, базах, в Барах.',
+    ok:[
+      '<strong>Противогаз</strong> — компенсировать равноценным.',
+      '<strong>Оружие</strong> — при изъятии последнего: дробовик 60 патр., автомат 120 патр., винтовка 60 патр.',
+      '<strong>Медицина</strong> — инъектор или аптечка 1 шт., бинт 2 шт., противорадиационные препараты по ситуации.',
+    ],
+    deny:[
+      'Технически сложные костюмы: Сева, Экзоскелет, Экзоскелет «Панцирь».',
+      'Фурнитуру из транспортных средств.',
+    ],
+    note:'Весь процесс — с видеофиксацией от грабящей стороны.' },
+
+  { id:'r-425', sec:4, num:'4.25–4.29', name:'Допросы и пытки',
+    sev:'ban', badges:[{cls:'bb',text:'БАН',tip:'При злоупотреблении'}],
+    body:'Пытки — крайняя мера для получения критически важной информации. Необходимы: доказательства причастности, квента дознавателя, наблюдение куратора.',
+    egs:[{label:'Стадии допроса', items:[
+      '<strong>1. Устный допрос:</strong> запрещено физическое насилие. Допустимы угрозы, психологическое давление, дезинформация.',
+      '<strong>2. Физическое воздействие:</strong> только при отказе от сотрудничества. Удары, холодное оружие (порезы без летального исхода).',
+      '<strong>3. Крайние меры:</strong> только если 1–2 не дали результата. Нелетальное ранение из огнестрела, медицина для поддержания жизни.',
+      '<strong>Завершение:</strong> информация получена или пленный без сознания — пытки немедленно прекращаются.',
+    ]}],
+    deny:[
+      'Убийство пленного без RP-причины (= RDM).',
+      'Пытки без доказательств вины (= NonRP).',
+      'Превышение допустимых мер на каждой стадии.',
+      'Пытки с целью бессмысленных страданий.',
+      'Использование мета-информации. Любые действия сексуального характера.',
+    ],
+    note:'Пытки не могут длиться дольше 1 часа. Пленный вправе врать до 3-й стадии.' },
+
+  { id:'r-430', sec:4, num:'4.30', name:'Амнезиак',
+    sev:'info', badges:[{cls:'bi',text:'ПРАВИЛО',tip:'Условие'}],
+    body:'Использование инъектора-амнезиака — только с чёткой RP-причиной и согласованием с куратором.',
+    egs:[{label:'Виды инъекторов', items:[
+      '<strong>А (Зелёный)</strong> — стирает последний час реального времени.',
+      '<strong>B (Синий)</strong> — стирает последние 24 часа.',
+      '<strong>С (Красный)</strong> — полностью стирает память персонажа.',
+    ]}] },
+
+  { id:'r-431', sec:4, num:'4.31–4.35', name:'Казнь и RPK',
+    sev:'perm', badges:[{cls:'bp',text:'RPK',tip:'Смерть персонажа'}],
+    body:'Способы получить RPK:',
+    egs:[{label:'Список', items:[
+      'Казнь; вывоз на Большую Землю; самоубийство.',
+      'Смерть в плену; просьба «Убей меня».',
+      'Смерть от рук владельцев ЗЗ; при дезертирстве; заказное убийство.',
+    ]}],
+    note:'Казнь требует одобрения администрации и видеодоказательств. Казнивший хранит видеофиксацию 3 дня. При уклонении жертвы от казни путём отсутствия в игре — может применяться обнуление персонажа.',
+    egs2:[{label:'Основания для казни', items:[
+      'Подрывная/агентурная деятельность против ГП, дезертирство.',
+      'Доказанный шпионаж, заказное убийство/пленение.',
+      'Невыполнение условий выкупа или неудачный штурм для освобождения заложника.',
+      'Воровство у ГП (проникновение на склад), доказанный саботаж.',
+      'Нарушение «Контракта на жизнь», смерть в ЗЗ от рук её владельцев (при наличии RP-причины).',
+    ]}] },
+
+  { id:'r-436', sec:4, num:'4.36', name:'Покушение',
+    sev:'perm', badges:[{cls:'bp',text:'RPK',tip:'Условия'}],
+    body:'Убийство цели даже на территории базы группировки.',
+    ok:[
+      'Убийство в голову одним выстрелом из пистолета с глушителем.',
+      'Убийца должен проникнуть на территорию и уйти в своё безопасное место. Не дошёл — RPK жертве не засчитывается.',
+      'Жертва не должна быть в безопасном месте одна в момент убийства.',
+    ],
+    note:'Только для членов группировок. Каждое покушение согласуется с администрацией, с полной видеофиксацией (хранить 3 дня).' },
+
+  { id:'r-437', sec:4, num:'4.37–4.39', name:'Исключения при казни / Последствия RPK',
+    sev:'info', badges:[{cls:'bi',text:'ПРАВИЛО',tip:'Условия'}],
+    body:'Бандиты не могут быть казнены исключительно за грабежи. Любая смерть представителя «Монолит» отыгрывается как тяжёлое ранение.',
+    subs:[{n:'Последствия RPK', t:'После RPK — 1 день игровой блокировки. После обнуления: вступить в ГП или стать повязкой — только спустя 7 дней. Игрок не может занимать должность выше, чем занимал до RPK.'}] },
+
+  { id:'r-440', sec:4, num:'4.40', name:'Опознание личности',
+    sev:'info', badges:[{cls:'bi',text:'ПРАВИЛО',tip:'Условие'}],
+    body:'Снаряжение не является показателем для определения личности. Личность можно определить по лицу или голосу.',
+    subs:[
+      {n:'Вариант А (OVERCOMING)', t:'Персонаж помнит голос/лицо в течение суток с момента, когда слышал/видел его в последний раз без маски или противогаза. Исключение: хорошо знакомый человек или бывший соратник по ГП.'},
+      {n:'Вариант Б (Sunshine)', t:'Запрещено идентифицировать по голосу при первой встрече. По лицу — возможно, если оно не скрыто маской/противогазом.'},
+    ] },
+
+  // ══ РАЗДЕЛ 5: ДЕЗЕРТИРСТВО ══
+  { id:'r-51', sec:5, num:'5.1', name:'Договорное покидание',
+    sev:'info', badges:[{cls:'bi',text:'Инфо',tip:'Общее положение'}],
+    body:'Дезертирство по взаимной договорённости с лидером не считается дезертирством. После покидания ГП необходимо отыграть одиночкой <strong>7 дней</strong>, после чего разрешено вступить в другую группировку.' },
+
+  { id:'r-52', sec:5, num:'5.2', name:'Дезертирство без договорённости',
+    sev:'warn', badges:[{cls:'bw',text:'Условие',tip:'Требует выполнения всех условий'}],
+    body:'Требования:',
+    subs:[
+      {n:'—', t:'С момента вступления прошло не менее <strong>7 дней</strong>'},
+      {n:'—', t:'Персонаж в рамках RP принял осознанное решение покинуть ГП'},
+      {n:'—', t:'Написан тикет, получено одобрение куратора с RP-основаниями'},
+    ] },
+
+  { id:'r-53', sec:5, num:'5.3', name:'Наличие свидетелей',
+    sev:'warn', badges:[{cls:'bw',text:'Условие',tip:'Требуется присутствие членов ГП'}],
+    body:'Дезертировать можно только когда на базе находятся <strong>3 и более</strong> членов вашей группировки, не заинтересованных в вашем побеге.' },
+
+  { id:'r-54', sec:5, num:'5.4', name:'Лимит дезертиров',
+    sev:'warn', badges:[{cls:'bw',text:'Лимит',tip:'Ограничение по составу'}],
+    body:'Максимальное количество дезертиров — <strong>половина состава</strong> группировки.' },
+
+  { id:'r-55', sec:5, num:'5.5', name:'Период дезертирства',
+    sev:'warn', badges:[{cls:'bw',text:'Режим',tip:'Особые условия на неделю'}],
+    body:'Дезертирство длится <strong>одну неделю</strong>. В этот период:',
+    subs:[
+      {n:'—', t:'Обязан носить форму покинутой группировки'},
+      {n:'—', t:'Обязан отыгрывать каждый день по <strong>2 часа</strong>'},
+      {n:'—', t:'Должен скрываться от бывшей группировки'},
+      {n:'—', t:'<strong>Любая смерть</strong> во время недели дезертирства — RP-смерть (исключение: баг/несовершенство игры)'},
+      {n:'—', t:'Запрещено намеренно находиться в одной чужой ЗЗ более 1,5 часа в день'},
+    ] },
+
+  { id:'r-56', sec:5, num:'5.6', name:'Поимка дезертира',
+    sev:'ban', badges:[{cls:'bb',text:'Казнь',tip:'Право на RP-казнь'}],
+    body:'При поимке и идентификации дезертира — группировка имеет право <strong>казнить</strong> бывшего соратника.' },
+
+  { id:'r-57', sec:5, num:'5.7', name:'Успешное дезертирство',
+    sev:'info', badges:[{cls:'bs',text:'Успех',tip:'Условия завершения'}],
+    body:'Если дезертира не обнаружили в течение недели — дезертирство успешно. Игрок обязан <strong>сменить позывной</strong> и может вступить в любую другую группировку.' },
+
+  { id:'r-58', sec:5, num:'5.8', name:'Разрешённое снаряжение',
+    sev:'info', badges:[{cls:'bi',text:'Список',tip:'Что дезертир может взять'}],
+    body:'Дезертир вправе взять: бронежилет, шлем, 1 автоматическое оружие, 1 дробовик, 1 пистолет, 1 нож, 5+1 магазинов для автомата, 4 обоймы на пистолет, 300 патронов для автомата, 400 для дробовика, 50 для пистолета, 8 восстанавливающих инъекций, 5 шт. Б-190, 3 бинта, 2 физраствора, 1 пачку тетрациклина, 1 пачку витаминов, 3 банки еды, 1 бутылку/флягу.' },
+
+  { id:'r-59', sec:5, num:'5.9', name:'Лимит средств',
+    sev:'warn', badges:[{cls:'bw',text:'Лимит',tip:'Ограничение баланса'}],
+    body:'Дезертир не вправе иметь на балансе банка более <strong>100 000 рублей</strong>.' },
+
+  { id:'r-510', sec:5, num:'5.10', name:'Ренегаты',
+    sev:'info', badges:[{cls:'bi',text:'Инфо',tip:'Ранний вариант'}],
+    body:'Дезертир вправе вступить в группировку <strong>«Ренегаты»</strong> в первый день дезертирства.' },
+
+  { id:'r-511', sec:5, num:'5.11', name:'Другие группировки',
+    sev:'info', badges:[{cls:'bi',text:'Инфо',tip:'После успешного дезертирства'}],
+    body:'Вступление в любую другую группировку возможно только после успешного завершения недели дезертирства и смены позывного.' },
+
+  { id:'r-512', sec:5, num:'5.12', name:'Иные способы выхода запрещены',
+    sev:'ban', badges:[{cls:'bb',text:'Запрет',tip:'Нарушение = обнуление'}],
+    body:'Выход из группировки RP-путём иными способами, кроме дезертирства — <strong>запрещён</strong>.' },
+
+  // ══ РАЗДЕЛ 6: БАЗЫ / ЗЗ ══
+  { id:'r-61', sec:6, num:'6.1–6.4', name:'Правила на территории группировок',
+    sev:'info', badges:[{cls:'bi',text:'ПРАВИЛО',tip:'Условия'}],
+    body:'Базы, лагеря и Бары подчиняются правилам контролирующей ГП. Представители ГП имеют право задерживать и обыскивать подозрительных.',
+    subs:[
+      {n:'6.3', t:'ГП, контролирующая территорию, вправе: ограничить проход другой ГП, выгнать любого посетителя, закрыть базу на карантин по RP-причинам.'},
+      {n:'6.4', t:'При конфликте на территории ГП — члены ГП вправе выдворить конфликтующих или задержать участников конфликта.'},
+    ] },
+
+  { id:'r-65', sec:6, num:'6.5', name:'NPC и информация',
+    sev:'info', badges:[{cls:'bi',text:'ПРАВИЛО',tip:'Условие'}],
+    body:'Вы не можете получить какую-либо информацию от трейдеров, мета-бойцов и квестовых NPC-персонажей.' },
+
+  { id:'r-66', sec:6, num:'6.6–6.12', name:'Запреты на территориях',
+    sev:'ban', badges:[{cls:'bb',text:'БАН',tip:'Нарушение'}],
+    body:'При конфликте без присутствия контролирующей ГП — стороны обязаны не доводить ситуацию до перестрелки.',
+    deny:[
+      '6.7 — Красть и грабить на территории Баз, Лагерей и Баров.',
+      '6.8 — Устраивать засады вблизи границ контролируемых территорий (забор + 100м).',
+      '6.9 — Провокации с целью использования нахождения в безопасном месте.',
+      '6.10 — Скрываться из RP-ситуации на территории Баз, лагерей и Баров.',
+      '6.11 — Провокационные действия с территорий Баз, Лагерей и Баров. Огонь из ЗЗ — даёт право открыть ЗЗ.',
+    ],
+    note:'6.10.1 — Если член ГП скрылся у себя на Базе — ЗЗ может быть открыта. Не относится к Деревне Новичков, Скадовску и Бару.' },
+
+  // ══ РАЗДЕЛ 7: РЕЙДЫ И ШТУРМЫ ══
+  { id:'r-71', sec:7, num:'7.1–7.2', name:'Определения: Рейд и Штурм',
+    sev:'info', badges:[{cls:'bi',text:'Термины',tip:'Различие между рейдом и штурмом'}],
+    body:'',
+    subs:[
+      {n:'7.1', t:'<strong>Рейд</strong> — налёт на базу ГП с целью ценного имущества. Только между ГП, война которых длится не менее 7 дней.'},
+      {n:'7.2', t:'<strong>Штурм</strong> — налёт на базу ГП с целью освобождения заложника или возврата транспорта.'},
+    ] },
+
+  { id:'r-73', sec:7, num:'7.3–7.11', name:'Общие правила рейда/штурма',
+    sev:'warn', badges:[{cls:'bw',text:'Условия',tip:'Временные рамки и ограничения'}],
+    body:'',
+    subs:[
+      {n:'7.3', t:'Рейд/Штурм объявляется с <strong>18:00 до 01:00</strong> по МСК.'},
+      {n:'7.4', t:'Количество нападающих не превышает количество обороняющихся более чем в <strong>2 раза</strong>.'},
+      {n:'7.5', t:'Штурм — только при <strong>2 и более</strong> представителях ГП на базе.'},
+    ],
+    deny:[
+      '7.6 — Возвращаться в рейд/штурм после смерти',
+      '7.7 — Присоединяться к штурму/рейду после его начала',
+      '7.8 — Деспавнить/уничтожать вещи со склада ГП во время рейда',
+      '7.9 — Выносить фурнитуру с базы обороняющихся',
+      '7.10 — Использовать тяжёлую технику и вертолёты',
+      '7.11 — Баррикадировать проходы с момента объявления штурма/рейда',
+    ] },
+
+  { id:'r-712', sec:7, num:'7.12–7.16', name:'Объявление рейда',
+    sev:'warn', badges:[{cls:'bw',text:'Процедура',tip:'Порядок объявления'}],
+    body:'',
+    subs:[
+      {n:'7.12', t:'Время назначается не менее чем за <strong>24 часа</strong>. Публикуется в КПК-канале Discord от лица старших по иерархии.'},
+      {n:'7.13', t:'После объявления атакующие отходят от базы на <strong>350 метров</strong>.'},
+      {n:'7.14', t:'Атакующие обязаны объявить условия, при которых рейд не состоится.'},
+      {n:'7.15', t:'Рейд длится до победы или не более <strong>1 часа</strong>.'},
+      {n:'7.16', t:'Все двери на базе атакуемых, кроме одной на выбор обороняющихся, должны быть открыты. Атакующим разрешено взорвать закрытую дверь.'},
+    ] },
+
+  { id:'r-717', sec:7, num:'7.17–7.19', name:'Объявление штурма',
+    sev:'warn', badges:[{cls:'bw',text:'Процедура',tip:'Порядок объявления штурма'}],
+    body:'',
+    subs:[
+      {n:'7.17', t:'Объявляется через мегафон старшим по иерархии вблизи базы. Даётся <strong>30 минут</strong> на подготовку защищающихся.'},
+      {n:'7.18', t:'Необходимо одобрение куратора с RP-доказательствами 2+ членов ГП на базе.'},
+      {n:'7.19', t:'Все двери открыты, кроме дверей к трейдеру. Запрещено прятаться за закрытой дверью.'},
+    ] },
+
+  { id:'r-720', sec:7, num:'7.20–7.22', name:'После победы',
+    sev:'info', badges:[{cls:'bi',text:'Инфо',tip:'Сбор лута и поведение'}],
+    body:'',
+    subs:[
+      {n:'7.20', t:'При удачном рейде — <strong>15 минут</strong> на сбор лута.'},
+      {n:'7.21', t:'При удачном штурме — <strong>10 минут</strong> на сбор лута.'},
+      {n:'7.22', t:'При смерти во время рейда/штурма защищающиеся должны выйти с сервера до его окончания.'},
+    ] },
+
+  { id:'r-723', sec:7, num:'7.23–7.25', name:'Транспорт и склад при рейде',
+    sev:'ban', badges:[{cls:'bb',text:'Запрет',tip:'Перемещение лута и транспорта'}],
+    body:'',
+    deny:[
+      '7.23 — Переносить лут из локеров/ящиков в транспорт перед/во время рейда',
+      '7.24 — Ставить транспорт в гараж после объявления штурма/рейда',
+      '7.25 — Держать личный транспорт в гараже во время рейда (атакующие не угоняют, только забирают вещи)',
+    ] },
+
+  { id:'r-726', sec:7, num:'7.26–7.29', name:'Союзники в рейде/штурме',
+    sev:'info', badges:[{cls:'bi',text:'Условия',tip:'Союз 7+ дней'}],
+    body:'',
+    subs:[
+      {n:'7.26', t:'Обороняющаяся ГП может позвать <strong>одну</strong> союзную ГП (союз 7+ дней).'},
+      {n:'7.27', t:'Атакующая ГП также может позвать <strong>одну</strong> союзную ГП (союз 7+ дней).'},
+      {n:'7.28', t:'Вольные сталкеры могут участвовать за любую сторону, но тогда звать союзную ГП запрещено.'},
+      {n:'7.29', t:'Атакующие обязаны пропустить членов обороняющейся ГП на базу в период подготовки.'},
+    ] },
+
+  { id:'r-730', sec:7, num:'7.30', name:'Повторные рейды',
+    sev:'warn', badges:[{cls:'bw',text:'Кулдаун',tip:'Интервал между рейдами'}],
+    body:'Рейдить одну и ту же группировку разрешено:',
+    subs:[
+      {n:'—', t:'Раз в <strong>7 дней</strong> в случае неудачного рейда'},
+      {n:'—', t:'Раз в <strong>14 дней</strong> в случае удачного рейда'},
+    ] },
+
+  { id:'r-731', sec:7, num:'7.31–7.31.2', name:'Рестарт сервера во время рейда',
+    sev:'warn', badges:[{cls:'bw',text:'Рестарт',tip:'Действия при рестарте'}],
+    body:'',
+    subs:[
+      {n:'7.31', t:'При рестарте все участники заходят и ждут оповещения. Защищающейся стороне — 10 дополнительных минут.'},
+      {n:'7.31.1', t:'Непричастным ГП запрещено посещать локацию во время штурма/рейда и в течение 30 минут после.'},
+      {n:'7.31.2', t:'Перед рейдом куратор фиксирует содержимое склада атакуемой ГП.'},
+    ] },
+
+  { id:'r-732', sec:7, num:'7.32', name:'Штурм базы Военных',
+    sev:'warn', badges:[{cls:'bw',text:'Особое',tip:'Специальные условия'}],
+    body:'Штурм базы Военных длится <strong>2 часа</strong>, после чего прибывает отряд подкрепления с Большой Земли и атакующая сторона обязана отступить.' },
+
+  { id:'r-733', sec:7, num:'7.33', name:'Победа в штурме',
+    sev:'info', badges:[{cls:'bi',text:'Условия',tip:'Критерии победы'}],
+    body:'Победа засчитывается при:',
+    subs:[
+      {n:'—', t:'Уничтожении всех членов противоборствующей стороны'},
+      {n:'—', t:'Захвате и удержании ключевой точки в течение <strong>25 минут</strong>'},
+    ] },
+
+  { id:'r-734', sec:7, num:'7.34–7.38', name:'Спасательная операция',
+    sev:'info', badges:[{cls:'bi',text:'Особый тип',tip:'Тайное спасение заложника'}],
+    body:'',
+    subs:[
+      {n:'7.34', t:'Объявляется с целью спасения заложника.'},
+      {n:'7.35', t:'Может быть проведена тайно — предупреждать обороняющихся не обязательно.'},
+      {n:'7.36', t:'Распространяются общие правила рейда.'},
+      {n:'7.37', t:'На время операции мета-бойцы упраздняются.'},
+      {n:'7.38', t:'Все действия согласуются с администрацией.'},
+    ] },
+
+  { id:'r-739', sec:7, num:'7.39–7.46', name:'Рейд Деревни Новичков',
+    sev:'warn', badges:[{cls:'bw',text:'Особое',tip:'Особый порядок для Военных'}],
+    body:'Не подлежит общим правилам рейда. Военные — 1 раз в сутки при наличии RP-основания.',
+    subs:[
+      {n:'7.41', t:'Перед рейдом — дважды объявить требования в мегафон + красная дымовая граната на территорию Деревни.'},
+      {n:'7.42', t:'Не желающие конфликтовать могут покинуть территорию или укрыться у Сидоровича.'},
+      {n:'7.43', t:'Военные не стреляют по убегающим, но вправе пытаться задержать.'},
+      {n:'7.44', t:'Решившие сопротивляться сталкеры — законная цель.'},
+      {n:'7.45', t:'ГП-хозяева деревни вправе не вмешиваться.'},
+      {n:'7.46', t:'Весь процесс под наблюдением куратора, согласован с администрацией.'},
+    ] },
+
+  { id:'r-747', sec:7, num:'7.47', name:'Штурм за транспорт',
+    sev:'warn', badges:[{cls:'bw',text:'Транспорт',tip:'Исход неудачного штурма'}],
+    body:'При проигрыше штурма за транспорт — захватившая сторона предлагает выкуп за вдвое большую сумму без права повторного штурма, или транспорт удаляется. Если транспорт пострадал — восстановлению не подлежит.' },
+
+  // ══ РАЗДЕЛ 8: ВОЙНА ══
+  { id:'r-81', sec:8, num:'8.1–8.2', name:'Объявление войны',
+    sev:'info', badges:[{cls:'bi',text:'Определение',tip:'Процесс объявления войны'}],
+    body:'Война — прямая конфронтация между ГП на 5 дней с подготовкой к решающему сражению. Для объявления нужны <strong>три весомые RP-причины</strong> и одобрение администрации.',
+    egs:[{label:'Примеры оснований', items:[
+      '3 и более вооружённых стычки между ГП',
+      'Невыполнение требований группировки',
+      'Обоюдное решение обеих сторон',
+      'Словесная перепалка с взаимным решением объявить войну',
+      'Иная причина, подтверждённая доказательствами и одобренная администрацией',
+    ]}],
+    note:'Запрещено объявлять войну ГП, контролирующей Деревню Новичков. Исключение: фанатичные группировки.' },
+
+  { id:'r-83', sec:8, num:'8.3–8.6', name:'Условия ведения войны',
+    sev:'warn', badges:[{cls:'bw',text:'Правила',tip:'Повязки и союзники'}],
+    body:'',
+    subs:[
+      {n:'8.3', t:'Сторонники ГП обязаны носить повязки соответствующего цвета.'},
+      {n:'8.4', t:'У каждой ГП по <strong>2 союзника</strong>, втянутых в боестолкновения.'},
+      {n:'8.5', t:'Между враждующими ГП <strong>упраздняется правило предупредительного выстрела</strong>.'},
+      {n:'8.6', t:'Все, замеченные в группе противника (даже без повязки), могут быть атакованы без предупреждения.'},
+    ] },
+
+  { id:'r-87', sec:8, num:'8.7–8.10', name:'Победа и завершение войны',
+    sev:'info', badges:[{cls:'bi',text:'Итог',tip:'Условия победы и выхода'}],
+    body:'',
+    subs:[
+      {n:'8.7', t:'Победа — <strong>захват вражеской базы</strong>. До захвата война продолжается.'},
+      {n:'8.8', t:'Штурмовать одну базу не более <strong>одного раза в сутки</strong>.'},
+      {n:'8.9', t:'Победитель определяет судьбу проигравших.'},
+      {n:'8.10', t:'Выход из войны — при достижении компромиссов обеих сторон.'},
+    ],
+    note:'Все этапы войны обсуждаются лидерами с администрацией. При долгом активном противостоянии без объявления войны — она может быть объявлена автоматически.' },
+
+  // ══ РАЗДЕЛ 9: ТРАНСПОРТ ══
+  { id:'r-91', sec:9, num:'9.1–9.4', name:'Общие правила транспорта',
+    sev:'info', badges:[{cls:'bi',text:'Инфо',tip:'Базовые положения'}],
+    body:'',
+    subs:[
+      {n:'9.1', t:'Транспорт используется на свой страх и риск. Администрация не отвечает за сохранность.'},
+      {n:'9.2', t:'Используйте виртуальный гараж для максимальной защиты.'},
+      {n:'9.3', t:'Запрещено оставлять транспорт вне гаража дольше <strong>4 часов</strong> без активного использования.'},
+      {n:'9.4', t:'Поломки решаются взаимодействием с комьюнити. Полностью вышедший из строя — ремонту не подлежит.'},
+    ] },
+
+  { id:'r-95', sec:9, num:'9.5–9.9', name:'Запреты при использовании транспорта',
+    sev:'ban', badges:[{cls:'bb',text:'Запрет',tip:'Критические ограничения'}],
+    body:'',
+    deny:[
+      '9.5 — Наезд со смертельным исходом = RDM (исключение: игнорирование движущегося ТС). Случайный наезд — немедленно сообщить администрации.',
+      '9.6 — Целенаправленно давить мутантов техникой',
+      '9.7 — Перемещать чужой транспорт без согласия владельца',
+      '9.8 — Необоснованно уничтожать/повреждать чужую технику',
+      '9.9 — Водителю использовать информацию от вида от 3-го лица',
+    ] },
+
+  { id:'r-910', sec:9, num:'9.10–9.14', name:'Угон транспорта',
+    sev:'warn', badges:[{cls:'bw',text:'Квента',tip:'Только взломщик или Бандиты'}],
+    body:'',
+    subs:[
+      {n:'9.10', t:'Угон — только взломщик (по квенте) или члены ГП «Бандиты».'},
+      {n:'9.11', t:'Без квенты нельзя завести даже открытую машину.'},
+      {n:'9.12', t:'Добровольная передача в плену: хозяин заводит и ставит на нейтраль. Ключи по RP в замке, без доступа к сигнализации.'},
+      {n:'9.13', t:'«Ключи» от автомобиля невозможно «найти на трупе».'},
+      {n:'9.14', t:'Запрещено угонять транспорт в радиусе <strong>100 метров</strong> от баз, баров, лагерей, а также на Кордоне.'},
+    ] },
+
+  { id:'r-915', sec:9, num:'9.15–9.16', name:'Вертолёты',
+    sev:'info', badges:[{cls:'bi',text:'Инфо',tip:'Особенности воздушного транспорта'}],
+    body:'Правила предупредительного выстрела по вертолётам — см. п. 3.10–3.11. Использование вертолёта может привести к травмам и тяжёлому ранению. Администрация не несёт ответственности.' },
+
+  // ══ РАЗДЕЛ 10: RP-РАЦИЯ ══
+  { id:'r-101', sec:10, num:'10.1–10.2', name:'RP-рация: определение и создание',
+    sev:'info', badges:[{cls:'bi',text:'Инфо',tip:'Аналог внутриигровой рации'}],
+    body:'<strong>RP-рация</strong> — частота в Discord проекта, аналог внутриигровой рации. Для создания частоты — найти в Discord раздел «RP-рации» и создать канал по примеру: «Частота 81.1».' },
+
+  { id:'r-103', sec:10, num:'10.3', name:'Подключение к рации',
+    sev:'warn', badges:[{cls:'bw',text:'Запрет',tip:'Только с RP-информацией'}],
+    body:'Запрещено подключаться к RP-рации, не имея RP-информации о её частоте. О ней вам должны сообщить во время RP-процесса.' },
+
+  { id:'r-104', sec:10, num:'10.4', name:'Дублирование в игру',
+    sev:'warn', badges:[{cls:'bw',text:'Обязательно',tip:'При наличии людей рядом'}],
+    body:'Во время общения по рации необходимо дублировать всю информацию в игру, если в радиусе ~20 метров находятся люди, не подключённые к вашей частоте.' },
+
+  { id:'r-105', sec:10, num:'10.5', name:'Смерть и рация',
+    sev:'ban', badges:[{cls:'bb',text:'Мета',tip:'Информация после смерти = Мета'}],
+    body:'Если вы погибли или находитесь в бессознательном состоянии — необходимо выключить звук и микрофон в Discord. Вся информация, переданная после смерти/потери сознания, считается Метой.' },
+
+  { id:'r-106', sec:10, num:'10.6–10.8', name:'Технические условия рации',
+    sev:'info', badges:[{cls:'bi',text:'Инфо',tip:'Техническое состояние рации'}],
+    body:'',
+    subs:[
+      {n:'10.6', t:'Для использования RP-рации — наличие рации с заряженной батарейкой в соответствующем слоте (или в руках при отсутствии слота).'},
+      {n:'10.7', t:'Включённая рация без батарейки — неактивна.'},
+      {n:'10.8', t:'На RP-рации группировок могут заходить только кураторы этой ГП (для наблюдения).'},
+    ] },
+
+  // ══ РАЗДЕЛ 11: ГРУППИРОВКИ ══
+  { id:'r-1101', sec:11, num:'11.1–11.11', name:'Общие правила группировок',
+    sev:'info', badges:[{cls:'bi',text:'Основа',tip:'Вступление, поведение, ответственность'}],
+    body:'',
+    subs:[
+      {n:'11.1', t:'Члены ГП обязаны преследовать цели группировки, её идеологию и соблюдать устав/лор.'},
+      {n:'11.2', t:'Вступление через мета-набор — собеседование (лидер + куратор). Через RP — испытательный срок <strong>7 дней</strong> с повязкой новобранца.'},
+      {n:'11.2.1', t:'Новобранец не имеет доступа к трейдеру и мета-складу ГП.'},
+      {n:'11.2.2', t:'Новобранец — не полноценный член ГП, действует по правилам одиночки.'},
+      {n:'11.3', t:'ГП набирает не более <strong>5 повязок</strong> (агентов/стажёров).'},
+      {n:'11.4', t:'Выход только через дезертирство (см. раздел 5). Иные способы — полное обнуление.'},
+      {n:'11.5', t:'Лидер вправе выгнать члена ГП только при наличии весомой причины.'},
+      {n:'11.6', t:'Самостоятельный выход менее чем через 2 недели — блок на вступление в другие ГП на <strong>7 дней</strong>.'},
+      {n:'11.7', t:'Коллективная ответственность: 3 предупреждения — ГП может быть расформирована.'},
+      {n:'11.8', t:'Запрещено тайно выносить имущество ГП, если в онлайне менее трёх незаинтересованных членов.'},
+      {n:'11.9', t:'Члены ГП обязаны находиться в своих Discord-каналах или на каналах RP-раций во время игры.'},
+      {n:'11.10', t:'Распределение обязанностей — лидер и замлидер.'},
+      {n:'11.11', t:'Все участники ГП обязаны иметь соответствующую приписку в лаунчере.'},
+    ] },
+
+  { id:'r-1112', sec:11, num:'11.12–11.15', name:'Фракции',
+    sev:'info', badges:[{cls:'bi',text:'Фракции',tip:'Отличие от группировок'}],
+    body:'',
+    subs:[
+      {n:'11.12', t:'Члены фракций не несут ответственности друг за друга — каждый отвечает только за себя.'},
+      {n:'11.13', t:'Фракциям нельзя объявить войну, и фракции не могут объявить войну ГП.'},
+      {n:'11.14', t:'Члены фракций могут участвовать в войнах ГП на общих правилах при весомой RP-мотивации.'},
+      {n:'11.15', t:'Доказанное участие члена фракции на стороне противника или агентурная работа — основание для RP-казни.'},
+    ] },
+
+  { id:'r-1116', sec:11, num:'11.16–11.17', name:'Группа',
+    sev:'info', badges:[{cls:'bi',text:'Термин',tip:'Временное формирование'}],
+    body:'',
+    subs:[
+      {n:'11.16', t:'<strong>Группа</strong> — временное формирование игроков с общей целью. Сталкер рядом с патрулём «Долга» может быть расценён как участник группы Долга.'},
+      {n:'11.17', t:'Пленники не входят в группу (нет общей цели).'},
+    ] },
+
+  { id:'r-1118', sec:11, num:'11.18–11.20', name:'Переворот и создание ГП',
+    sev:'warn', badges:[{cls:'bw',text:'Особое',tip:'Согласование с администрацией'}],
+    body:'',
+    subs:[
+      {n:'11.18', t:'<strong>Переворот</strong>: при весомых RP-основаниях, поддержке части членов ГП — обязательно согласовать с Администрацией.'},
+      {n:'11.19', t:'При перевороте на территории базы — мета-бойцы защищают действующего лидера.'},
+      {n:'11.20', t:'<strong>Создание новой ГП</strong>: чёткое изложение деятельности и лора, собеседование всех участников, написанные квенты — активное преимущество.'},
+    ] },
+
+  { id:'r-1121', sec:11, num:'11.21', name:'Одиночки и агрессия',
+    sev:'ban', badges:[{cls:'bb',text:'Запрет',tip:'Первый выстрел'}],
+    body:'Вольным сталкерам (одиночкам) запрещено проявлять вооружённую агрессию первыми.',
+    ok:[
+      'Угроза жизни (самооборона)',
+      'Красная Зона',
+      'Квента «Грабитель» (для ограбления)',
+      'Ситуации по правилам предупредительного выстрела (раздел 3)',
+    ] },
+
+  { id:'r-1122', sec:11, num:'11.22', name:'Контракт на жизнь',
+    sev:'warn', badges:[{cls:'bw',text:'Контракт',tip:'Нарушение = RPK'}],
+    body:'<strong>Контракт на жизнь</strong> — соглашение пленившей стороны и пленника: пленник выполняет условия в обмен на жизнь. Нарушение контракта является основанием для RP-казни нарушителя.' },
+
+  { id:'r-1130', sec:11, num:'Таблица', name:'Группировки и фракции',
+    sev:'info', badges:[{cls:'bi',text:'Список',tip:'Все ГП и фракции'}],
+    body:`<table style="width:100%;border-collapse:collapse;font-size:.88em;">
+      <thead><tr style="border-bottom:1px solid var(--border)"><th style="text-align:left;padding:4px 8px">Группировка</th><th style="padding:4px 8px">Приписка</th><th style="text-align:left;padding:4px 8px">Фракция</th><th style="padding:4px 8px">Приписка</th></tr></thead>
+      <tbody>
+        <tr><td style="padding:4px 8px">Учёные</td><td style="padding:4px 8px;text-align:center">[SC]</td><td style="padding:4px 8px">Одиночки</td><td style="padding:4px 8px;text-align:center">—</td></tr>
+        <tr><td style="padding:4px 8px">Военные</td><td style="padding:4px 8px;text-align:center">[AR]</td><td style="padding:4px 8px">Наёмники</td><td style="padding:4px 8px;text-align:center">[ME]</td></tr>
+        <tr><td style="padding:4px 8px">Нейтралы</td><td style="padding:4px 8px;text-align:center">[NE]</td><td></td><td></td></tr>
+        <tr><td style="padding:4px 8px">Бандиты</td><td style="padding:4px 8px;text-align:center">[BD]</td><td></td><td></td></tr>
+        <tr><td style="padding:4px 8px">Долг</td><td style="padding:4px 8px;text-align:center">[DT]</td><td></td><td></td></tr>
+        <tr><td style="padding:4px 8px">Свобода</td><td style="padding:4px 8px;text-align:center">[FR]</td><td></td><td></td></tr>
+        <tr><td style="padding:4px 8px">Чистое Небо</td><td style="padding:4px 8px;text-align:center">[CS]</td><td></td><td></td></tr>
+        <tr><td style="padding:4px 8px">Монолит</td><td style="padding:4px 8px;text-align:center">[MO]</td><td></td><td></td></tr>
+        <tr><td style="padding:4px 8px">Охота</td><td style="padding:4px 8px;text-align:center">[HU]</td><td></td><td></td></tr>
+        <tr><td style="padding:4px 8px">Грех</td><td style="padding:4px 8px;text-align:center">[SIN]</td><td></td><td></td></tr>
+        <tr><td style="padding:4px 8px">Стрела</td><td style="padding:4px 8px;text-align:center">[ST]</td><td></td><td></td></tr>
+      </tbody>
+    </table>`, raw:true },
+
+  { id:'r-1140', sec:11, num:'С.О.П.', name:'Военные [AR]',
+    sev:'info', badges:[{cls:'bi',text:'ГП',tip:'Детальные правила'}],
+    body:'',
+    subs:[
+      {n:'—', t:'Официальные представители сил ДКБ на территории ЧЗО.'},
+      {n:'—', t:'Право открыть огонь при приближении ближе <strong>30м</strong> к гермоворотам.'},
+      {n:'—', t:'Могут останавливать и досматривать сталкеров по всей Зоне (кроме лагерей, Баров, Баз).'},
+      {n:'—', t:'Могут изымать: наркотики, оружие, боеприпасы, взрывчатку, документацию, части мутантов (при незаконной добыче).'},
+      {n:'—', t:'Запрещено изымать: деньги, медицину, еду/воду, элементы снаряжения (для изъятия денег — нужна квента).'},
+      {n:'—', t:'Несут службу «Полиции» на территории ПГТ Рябиново. Могут задерживать подозрительных. Максимальный срок заключения — <strong>5 часов</strong>.'},
+    ] },
+
+  { id:'r-1141', sec:11, num:'С.О.П.', name:'Одиночки',
+    sev:'info', badges:[{cls:'bi',text:'Фракция',tip:'Свободные сталкеры'}],
+    body:'',
+    subs:[
+      {n:'—', t:'Могут работать на любые ГП и преследовать свои цели.'},
+      {n:'—', t:'Могут заступаться за других одиночек при грабеже.'},
+      {n:'—', t:'Без квенты запрещён гоп-стоп в любом проявлении.'},
+    ] },
+
+  { id:'r-1142', sec:11, num:'С.О.П.', name:'Бандиты [BD]',
+    sev:'info', badges:[{cls:'bi',text:'ГП',tip:'Грабежи и угоны'}],
+    body:'',
+    subs:[
+      {n:'—', t:'Промышляют грабежами (регламент — раздел 4). Разрешены грабежи по всей Зоне, кроме Кордона, баз, Баров.'},
+      {n:'—', t:'Могут угонять транспорт (кроме Кордона, баз, 100м от них).'},
+      {n:'—', t:'Новобранец участвует в ограблении только в присутствии двух членов ГП.'},
+      {n:'—', t:'Не могут быть казнены исключительно за грабежи.'},
+    ] },
+
+  { id:'r-1143', sec:11, num:'С.О.П.', name:'Учёные [SC]',
+    sev:'info', badges:[{cls:'bi',text:'ГП',tip:'Научная деятельность'}],
+    body:'',
+    subs:[
+      {n:'—', t:'Находятся в Зоне на официальной основе, ведут исследовательскую деятельность.'},
+      {n:'—', t:'Вступают в боевые действия только в порядке самообороны.'},
+      {n:'—', t:'Могут нанимать охрану у Военных и не противоречащих по лору ГП.'},
+      {n:'—', t:'Могут заключать контракты с несколькими ГП одновременно (аполитичность).'},
+      {n:'—', t:'Могут объявить в розыск через Военных лиц, мешающих научной деятельности.'},
+    ] },
+
+  { id:'r-1144', sec:11, num:'С.О.П.', name:'Долг [DT]',
+    sev:'info', badges:[{cls:'bi',text:'ГП',tip:'Борьба с аномалиями'}],
+    body:'',
+    subs:[
+      {n:'—', t:'Ограничение на поиск и добычу артефактов (идеология).'},
+      {n:'—', t:'Могут останавливать и досматривать на наличие артефактов, контейнеров, детекторов.'},
+      {n:'—', t:'Могут поощрять за сдачу артефактов для утилизации/передачи Учёным.'},
+      {n:'—', t:'Могут осуществлять рейды на логова мутантов.'},
+    ] },
+
+  { id:'r-1145', sec:11, num:'С.О.П.', name:'Свобода [FR]',
+    sev:'info', badges:[{cls:'bi',text:'ГП',tip:'Открытость Зоны'}],
+    body:'',
+    subs:[
+      {n:'—', t:'Ограничение на целенаправленную добычу частей мутантов (идеология).'},
+      {n:'—', t:'Могут досматривать враждебных одиночек и ГП на наличие частей мутантов.'},
+    ] },
+
+  { id:'r-1146', sec:11, num:'С.О.П.', name:'Монолит [MO]',
+    sev:'warn', badges:[{cls:'bw',text:'Особое',tip:'Фанатики, без PG'}],
+    body:'',
+    subs:[
+      {n:'—', t:'Не распространяется правило PG. Вступая — персонаж забывает всё о прошлом.'},
+      {n:'—', t:'Запрещено снабжать/продавать оружие (исключение: адепты и агенты). Не более 4 адептов.'},
+      {n:'—', t:'Иммунитет к радиации (не бесконечный). Запрещено посещать южные локации (Кордон, Болота, Лощина — запрещено; Свалка, Агропром, Тёмная Долина — раз в сутки по запросу).'},
+      {n:'—', t:'Имеют право изымать: документацию, детекторы, ключ-карты, контейнеры, научное оборудование.'},
+      {n:'—', t:'Любая смерть — тяжёлое ранение. С трупов запрещено снимать шевроны, одежду, обувь, маски, бронежилеты, шлемы.'},
+    ] },
+
+  { id:'r-1147', sec:11, num:'С.О.П.', name:'Чистое Небо [CS]',
+    sev:'info', badges:[{cls:'bi',text:'ГП',tip:'Нейтральная научная ГП'}],
+    body:'',
+    subs:[
+      {n:'—', t:'Нейтральная научная ГП. Могут похищать представителей других научных ГП для информации или опытов. Не более 2 учёных.'},
+      {n:'—', t:'Бойцы могут передвигаться под шевронами одиночек (подчиняются правилам одиночек).'},
+      {n:'—', t:'Право казнить обвинённого в шпионаже. Время пыток бойца ЧН уменьшено вдвое.'},
+      {n:'—', t:'Право изымать: научное оборудование, артефакты, документацию.'},
+      {n:'—', t:'Не могут объявлять войну, но могут быть союзником.'},
+    ] },
+
+  { id:'r-1148', sec:11, num:'С.О.П.', name:'Наёмники [ME]',
+    sev:'info', badges:[{cls:'bi',text:'Фракция',tip:'Работают за деньги'}],
+    body:'',
+    subs:[
+      {n:'—', t:'Заинтересованы только в деньгах. Могут похищать в рамках контракта.'},
+      {n:'—', t:'Могут передвигаться скрытно под видом одиночек.'},
+      {n:'—', t:'Не могут объявлять войну, но могут примкнуть по контракту.'},
+      {n:'—', t:'Могут нанимать охрану баз, аванпостов, маршрутов. Могут брать заказ на казнь (согласование с администрацией).'},
+      {n:'—', t:'Право изымать: документы, записи, дневники, средства связи, ноутбуки, ключи, карты доступа.'},
+    ] },
+
+  { id:'r-1149', sec:11, num:'С.О.П.', name:'Охота · Ренегаты · Военсталы',
+    sev:'info', badges:[{cls:'bi',text:'ГП',tip:'Прочие группировки'}],
+    body:`<strong>Охота [HU]:</strong> Не может объявить войну/штурм. Запрещено грабить, пленить ради выкупа, проявлять агрессию первыми. По умолчанию дружественны всем.
+    <br><br>
+    <strong>Ренегаты [RE]:</strong> Презренные личности — бандиты, мародёры, предатели. Право похищать без весомой RP-причины. Могут носить снаряжение любой ГП (кроме «Греха» и «Монолита»). Запрещено посещать Деревню Новичков и Бар без одобрения.
+    <br><br>
+    <strong>Военсталы:</strong> Опытные военные/сталкеры по контракту. Право похищать при подозрении в сокрытии документации. Могут маскироваться под одиночек. Право досматривать на наркотики, взрывчатку, секретную документацию.`, raw:true },
+
+  // ══ РАЗДЕЛ 12: КВЕНТА ══
+  { id:'r-1201', sec:12, num:'12.1–12.2', name:'Требования к квенте',
+    sev:'info', badges:[{cls:'bi',text:'Инфо',tip:'Google Docs, уникальность'}],
+    body:'Квента пишется <strong>исключительно в Google Документах</strong>. Требования:',
+    subs:[
+      {n:'—', t:'Краткая автобиография персонажа'},
+      {n:'—', t:'Цель и причина прибытия в Зону'},
+      {n:'—', t:'История получения доп. навыков'},
+      {n:'—', t:'Деятельность на территории ЧЗО. Ключевые даты должны учитывать лор сервера'},
+      {n:'—', t:'Квента должна быть <strong>уникальной</strong>. Запрещён копипаст и использование ИИ'},
+      {n:'—', t:'Из ЧЗО на Большую Землю идут только обрывки информации — полной картины знать нельзя'},
+      {n:'—', t:'Запрещено брать позывные легендарных личностей сеттинга'},
+    ] },
+
+  { id:'r-1210', sec:12, num:'Таблица', name:'Базовые специализации',
+    sev:'info', badges:[{cls:'bi',text:'Список',tip:'Все доступные квенты'}],
+    body:`<table style="width:100%;border-collapse:collapse;font-size:.88em;">
+      <thead><tr style="border-bottom:1px solid var(--border)"><th style="text-align:left;padding:4px 8px">Специализация</th><th style="text-align:left;padding:4px 8px">Описание</th></tr></thead>
+      <tbody>
+        <tr><td style="padding:4px 8px"><strong>Учёный</strong></td><td style="padding:4px 8px">Создание научных разработок в команде с техником или медиком</td></tr>
+        <tr><td style="padding:4px 8px"><strong>Медик</strong></td><td style="padding:4px 8px">Создание медицинских разработок в команде с учёным или техником</td></tr>
+        <tr><td style="padding:4px 8px"><strong>Техник</strong></td><td style="padding:4px 8px">Создание технических разработок в команде с учёным или медиком</td></tr>
+        <tr><td style="padding:4px 8px"><strong>Палач</strong></td><td style="padding:4px 8px">Снайперский выстрел, подрыв или выстрел в упор для ликвидации (RPK). Нужна RP-причина</td></tr>
+        <tr><td style="padding:4px 8px"><strong>Грабитель</strong></td><td style="padding:4px 8px">Ограбления вне зависимости от принадлежности к ГП</td></tr>
+        <tr><td style="padding:4px 8px"><strong>Медвежатник</strong></td><td style="padding:4px 8px">Вскрытие замков КПЗ или транспорта для угона</td></tr>
+        <tr><td style="padding:4px 8px"><strong>Дознаватель</strong></td><td style="padding:4px 8px">Совершение пыток для получения информации. Нужна RP-причина</td></tr>
+        <tr><td style="padding:4px 8px"><strong>Отчаянный</strong></td><td style="padding:4px 8px">Лишает персонажа чувства страха, позволяет врать при пытках</td></tr>
+        <tr><td style="padding:4px 8px"><strong>Хакер</strong></td><td style="padding:4px 8px">Взлом чужих КПК и извлечение информации</td></tr>
+      </tbody>
+    </table>
+    <div class="note">Обладателям квент «Техник» и «Медик» запрещено выносить за пределы мастерской-лаборатории шеврон, открывающий доступ к крафтам.</div>`, raw:true },
+
+  // ══ РАЗДЕЛ 13: РАНГИ ══
+  { id:'r-1301', sec:13, num:'13.1–13.3', name:'Система рангов',
+    sev:'info', badges:[{cls:'bi',text:'Инфо',tip:'Заявка 1-го и 15-го числа'}],
+    body:`Ранги отражают опыт в Зоне и определяют точку спавна при тяжёлом ранении. Заявка на повышение — <strong>1-го и 15-го числа</strong> каждого месяца в специальном канале Discord.
+    <table style="width:100%;border-collapse:collapse;font-size:.88em;margin-top:8px;">
+      <thead><tr style="border-bottom:1px solid var(--border)"><th style="text-align:left;padding:4px 8px">Ранг</th><th style="text-align:left;padding:4px 8px">Описание</th><th style="text-align:left;padding:4px 8px">Спавн</th></tr></thead>
+      <tbody>
+        <tr><td style="padding:4px 8px">Отмычка</td><td style="padding:4px 8px">Игрок без ранга</td><td style="padding:4px 8px">Начало пути</td></tr>
+        <tr><td style="padding:4px 8px">Новичок</td><td style="padding:4px 8px">Приобрёл шеврон принадлежности</td><td style="padding:4px 8px">Деревня Новичков</td></tr>
+        <tr><td style="padding:4px 8px">Опытный</td><td style="padding:4px 8px">Освоился в Зоне</td><td style="padding:4px 8px">Скадовск</td></tr>
+        <tr><td style="padding:4px 8px">Ветеран</td><td style="padding:4px 8px">Секретно</td><td style="padding:4px 8px">Секретно</td></tr>
+        <tr><td style="padding:4px 8px">Мастер</td><td style="padding:4px 8px">Секретно</td><td style="padding:4px 8px">Секретно</td></tr>
+        <tr><td style="padding:4px 8px">Легенда</td><td style="padding:4px 8px">Секретно</td><td style="padding:4px 8px">Секретно</td></tr>
+      </tbody>
+    </table>`, raw:true },
+
+  // ══ РАЗДЕЛ 14: ЭКЗОСКЕЛЕТ ══
+  { id:'r-1401', sec:14, num:'14.1–14.9', name:'Экзоскелет',
+    sev:'warn', badges:[{cls:'bw',text:'Условия',tip:'Только техник может надеть/снять'}],
+    body:'',
+    subs:[
+      {n:'14.1', t:'Запрещено носить Экзоскелет не в полном комплекте.'},
+      {n:'14.2', t:'Надевать/снимать/перекрашивать Экзоскелет — только обученный техник. Куратор вправе запросить видеоподтверждение обучения.'},
+      {n:'14.3', t:'Снятие/одевание занимает <strong>10 минут</strong> реального времени.'},
+      {n:'14.4', t:'Снятие необученным лицом — костюм считается сломанным (не восстанавливается). Лицу — наказание по п. 1.3.'},
+      {n:'14.5', t:'Процесс снятия/одевания обязательно подкреплён видеооткатом.'},
+      {n:'14.6', t:'Фанатичным ГП разрешено самостоятельно надевать Экзоскелет соответствующей расцветки. Снимать иной расцветки — только техник.'},
+      {n:'14.7', t:'Чинить Экзоскелет — только научные ГП с разработкой данного костюма.'},
+      {n:'14.8', t:'В Экзоскелете разрешено переносить вещи со смертельным радиационным фоном.'},
+      {n:'14.9', t:'Поверх Экзоскелета запрещено надевать рюкзаки, разгрузки, бронежилеты и прочее.'},
+    ] },
+
+  { id:'r-1410', sec:14, num:'14.10–14.11', name:'Сева и технически сложные костюмы',
+    sev:'warn', badges:[{cls:'bw',text:'Условия',tip:'Только в полном комплекте'}],
+    body:'',
+    subs:[
+      {n:'14.10', t:'Костюм Севы разрешено носить только в <strong>полном комплекте</strong>.'},
+      {n:'14.11', t:'Технически сложные костюмы (Сева, Экзоскелет, Экзоскелет «Панцирь») могут быть сняты с трупа <strong>исключительно техником</strong>.'},
+    ] },
+
+  // ══ РАЗДЕЛ 15: ТЕХНИК И МЕДИК ══
+  { id:'r-1501', sec:15, num:'15.1–15.6', name:'Техник',
+    sev:'info', badges:[{cls:'bi',text:'Роль',tip:'Один на группировку'}],
+    body:'',
+    subs:[
+      {n:'15.1', t:'Роль техника — представители ГП, сталкерских формирований, лагерей и домов.'},
+      {n:'15.2', t:'Обязательна квента, подтверждающая технические навыки.'},
+      {n:'15.3', t:'Внутри одной ГП только <strong>один техник</strong>.'},
+      {n:'15.4', t:'Верстаком разрешено пользоваться любому игроку.'},
+      {n:'15.5', t:'При создании/модернизации/перекраске техник отдаёт использованные одноразовые предметы RP-куратору.'},
+      {n:'15.6', t:'Ремонт снаряжения — через функциональный верстак.'},
+    ] },
+
+  { id:'r-1507', sec:15, num:'15.7–15.11', name:'Медик',
+    sev:'info', badges:[{cls:'bi',text:'Роль',tip:'Один на группировку'}],
+    body:'',
+    subs:[
+      {n:'15.7', t:'Роль медика — только представители ГП (исключение: Монолит, Грех).'},
+      {n:'15.8', t:'Обязательна квента с подтверждением медицинских знаний.'},
+      {n:'15.9', t:'Внутри одной ГП только <strong>один медик</strong>.'},
+      {n:'15.10', t:'Использование оборудования техника/медика необученным лицом — <strong>NonRP</strong>.'},
+      {n:'15.11', t:'Реанимация должна осуществляться в контексте игровой ситуации и соответствовать уровню RP-отыгрыша.'},
+    ] },
+
+  // ══ РАЗДЕЛ 16: КПК ══
+  { id:'r-1601', sec:16, num:'16.1', name:'RP-информация через КПК',
+    sev:'warn', badges:[{cls:'bw',text:'Мета',tip:'Только внутриигровой КПК'}],
+    body:'RP-информация, передаваемая через КПК — <strong>исключительно с помощью внутриигрового КПК</strong>. Любые другие способы — мета-информация.' },
+
+  { id:'r-1602', sec:16, num:'16.2', name:'Тайные локации',
+    sev:'info', badges:[{cls:'bi',text:'Инфо',tip:'Временная петля'}],
+    body:'Тайные локации — скрытые места. Если удалось попасть — обратитесь к администрации для получения возможности попасть во <strong>«временную петлю»</strong> (выживание в одиночестве в обмен на уникальные достижения).' },
+
+  // ══ РАЗДЕЛ 17: СТРИМЕРЫ ══
+  { id:'r-1701', sec:17, num:'17.1–17.7', name:'Правила для стримеров',
+    sev:'ban', badges:[{cls:'bb',text:'Запрет',tip:'Мета из чата/донатов'}],
+    body:'',
+    deny:[
+      '17.1 — Раскрывать информацию о трансляции в ходе RP',
+      '17.2 — Использовать данные из чата, донатов, комментариев во время игры',
+      '17.4 — Публиковать ссылки на стримы вне специально выделенных каналов. Запрещено ссылаться на стримы других платформ/проектов',
+      '17.5 — Реклама сторонних продуктов (без партнёрства с сервером)',
+      '17.6 — Использовать информацию, полученную при просмотре стрима (бан 2 недели)',
+      '17.7 — Транслировать контент, нарушающий законодательство или стандарты сервера',
+    ],
+    subs:[{n:'17.3', t:'Стримеры-члены ГП обязаны соблюдать неразглашение информации о товарах и сделках через трейдеров ГП.'}] },
+
+  // ══ РАЗДЕЛ 18: АРЕНДА ══
+  { id:'r-1801', sec:18, num:'18.1–18.4', name:'Аренда домов и лагерей',
+    sev:'info', badges:[{cls:'bi',text:'Инфо',tip:'Условия аренды'}],
+    body:'',
+    subs:[
+      {n:'18.1', t:'При рейде/штурме арендованные дома не открываются.'},
+      {n:'18.2', t:'Запрещено использовать арендованные дома для сокрытия имущества ГП (Abuse).'},
+      {n:'18.3', t:'Арендованные дома предназначены для сдачи в аренду, а не для личного использования арендодателей.'},
+      {n:'18.4', t:'Арендованный лагерь или дом на нейтральной территории имеют ЗЗ по забору и антикемп 50м от забора.'},
+    ] },
+
+  // ══ РАЗДЕЛ 19: NPC ══
+  { id:'r-1901', sec:19, num:'19.1–19.3', name:'Взаимодействие с NPC',
+    sev:'warn', badges:[{cls:'bw',text:'ПРАВИЛО',tip:'Условия'}],
+    body:'',
+    subs:[
+      {n:'19.1', t:'Вы не можете получить какую-либо информацию от трейдеров, мета-бойцов и квестовых NPC-персонажей.'},
+      {n:'19.2', t:'Нападение на неагрессивных NPC, охраняющих ЗЗ, является PG и наказывается соответственно.'},
+      {n:'19.3', t:'Запрещено использовать NPC для получения игрового преимущества (заманивание мутантов к NPC, использование как щита и т.д.).'},
+    ] },
+
+];
+
+/* ══════════════════════════════════════════════
+   РЕНДЕРЕР — не нужно трогать
+══════════════════════════════════════════════ */
+
+function renderBadge(b) {
+  return `<span class="badge ${b.cls}">${b.text}<span class="tip">${b.tip}</span></span>`;
+}
+
+function renderEgs(egs) {
+  if (!egs || !egs.length) return '';
+  return egs.map(eg => `
+    <div class="eg-toggle" onclick="toggleEg(this)">▸ ${eg.label}</div>
+    <div class="eg-list">
+      ${eg.items.map(i => `<div class="eg">${i}</div>`).join('')}
+    </div>
+  `).join('');
+}
+
+function renderBlk(items, cls, title) {
+  if (!items || !items.length) return '';
+  return `<div class="blk blk-${cls}">
+    <div class="blk-t">${title}</div>
+    ${items.map(i => `<div class="eg">${i}</div>`).join('')}
+  </div>`;
+}
+
+function renderSubs(subs) {
+  if (!subs || !subs.length) return '';
+  return subs.map(s => `<div class="subrule"><div class="subrule-n">${s.n}</div><div class="subrule-t">${s.t}</div></div>`).join('');
+}
+
+function renderRule(r) {
+  const badges = (r.badges||[]).map(renderBadge).join('');
+  let bodyHtml = '';
+  if (r.raw) {
+    bodyHtml = r.body;
+  } else {
+    bodyHtml = r.body || '';
+    bodyHtml += renderEgs(r.egs);
+    bodyHtml += renderBlk(r.ok, 'ok', 'Обязательная компенсация / Разрешено');
+    bodyHtml += renderBlk(r.deny, 'deny', 'Запрещено');
+    bodyHtml += renderSubs(r.subs);
+    bodyHtml += renderEgs(r.egs2);
+    if (r.note) bodyHtml += `<div class="note">${r.note}</div>`;
+  }
+  return `<div class="rule" id="${r.id}" data-sev="${r.sev}">
+    <a class="anchor" href="#${r.id}" onclick="copyAnchor(this);return false;">#</a>
+    <div class="rule-top">
+      <div class="rule-num">${r.num}</div>
+      <div class="rule-name">${r.name}</div>
+      <div class="badges">${badges}</div>
+    </div>
+    <div class="rule-body">${bodyHtml}</div>
+  </div>`;
+}
+
+function buildSidebar() {
+  const nav = document.getElementById('sidebar');
+  nav.innerHTML = `
+    <div class="sb-search">
+      <div class="sb-search-inp">
+        <span class="si">⌕</span>
+        <input id="search" type="text" placeholder="Поиск по правилам..." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="snav" id="snav" style="margin-top:6px;">
+        <span class="snav-info" id="snav-info"></span>
+        <button class="snav-btn" onclick="stepResult(-1)" title="Предыдущий (Shift+Enter)">↑</button>
+        <button class="snav-btn" onclick="stepResult(1)"  title="Следующий (Enter)">↓</button>
+        <button class="snav-btn snav-close" onclick="clearSearch()" title="Сбросить (Esc)">✕</button>
+      </div>
+      <div class="sb-filters">
+        <button class="flt active" data-f="all">ВСЕ</button>
+        <button class="flt" data-f="warn">ПРЕДУПР.</button>
+        <button class="flt" data-f="ban">БАН</button>
+        <button class="flt" data-f="perm">ПЕРМА</button>
+      </div>
+      <div class="sb-found" id="found-wrap">Найдено: <b id="cnt-found">0</b></div>
+    </div>
+    <div class="sb-label">Навигация</div>
+    ${SECTIONS.map(s => `<a href="#sec-${s.id}" class="sb-link" data-sec="sec-${s.id}"><span class="sb-n">${String(s.id).padStart(2,'0')}</span>${s.title}<span class="sb-cnt" id="cnt-${s.id}">0</span></a>`).join('')}
+  `;
+}
+
+function buildSections() {
+  const root = document.getElementById('sections-root');
+  SECTIONS.forEach(s => {
+    const secRules = RULES.filter(r => r.sec === s.id);
+    const div = document.createElement('div');
+    div.className = 'sec';
+    div.id = `sec-${s.id}`;
+    div.innerHTML = `
+      <div class="sec-hdr open" onclick="toggleSec(this)">
+        <div class="sec-n">${String(s.id).padStart(2,'0')}</div>
+        <div class="sec-title">${s.title}</div>
+        <div class="sec-info">РАЗДЕЛ ${s.id}</div>
+        <div class="sec-arr">▾</div>
+      </div>
+      <div class="sec-body">
+        ${secRules.map(renderRule).join('')}
+      </div>`;
+    root.appendChild(div);
+  });
+}
+
+buildSidebar();
+buildSections();
+
+// Счётчик правил
+const rules = Array.from(document.querySelectorAll('.rule'));
+document.getElementById('cnt').textContent = rules.length;
+SECTIONS.forEach(s => {
+  const el = document.getElementById(`cnt-${s.id}`);
+  if (el) el.textContent = RULES.filter(r => r.sec === s.id).length;
+});
+
+// Анимация появления
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { rootMargin:'0px 0px -40px 0px' });
+rules.forEach(r => observer.observe(r));
+
+function toggleSec(hdr) {
+  hdr.classList.toggle('open');
+  hdr.nextElementSibling.classList.toggle('hidden');
+}
+function toggleEg(btn) {
+  btn.nextElementSibling.classList.toggle('open');
+  btn.textContent = btn.textContent.startsWith('▸') ? btn.textContent.replace('▸','▾') : btn.textContent.replace('▾','▸');
+}
+function copyAnchor(a) {
+  const url = location.origin + location.pathname + a.getAttribute('href');
+  navigator.clipboard?.writeText(url).then(() => { a.classList.add('ok'); setTimeout(() => a.classList.remove('ok'), 1500); });
+}
+
+// Прогресс-бар + кнопка наверх + Smart header
+const prog = document.getElementById('prog');
+const btt  = document.getElementById('btt');
+let lastY = 0;
+window.addEventListener('scroll', () => {
+  const st = window.scrollY, sh = document.body.scrollHeight - window.innerHeight;
+  prog.style.width = (sh > 0 ? st/sh*100 : 0) + '%';
+  btt.classList.toggle('show', st > 400);
+  const hdr = document.querySelector('header');
+  if (st > lastY && st > 80) hdr.style.top = '-' + getComputedStyle(document.documentElement).getPropertyValue('--hdr');
+  else hdr.style.top = '0';
+  lastY = st;
+  // Sidebar active link
+  document.querySelectorAll('.sb-link').forEach(link => {
+    const sec = document.getElementById(link.dataset.sec);
+    if (!sec) return;
+    const r = sec.getBoundingClientRect();
+    link.classList.toggle('active', r.top <= 80 && r.bottom > 80);
+  });
+});
+
+// ПОИСК
+const searchEl = document.getElementById('search');
+const foundWrap = document.getElementById('found-wrap');
+const cntFound  = document.getElementById('cnt-found');
+const noRes     = document.getElementById('no-res');
+const snav      = document.getElementById('snav');
+const snavInfo  = document.getElementById('snav-info');
+let matchedRules = [], matchIdx = -1;
+
+function updateSnav() {
+  if (matchedRules.length > 0) {
+    snav.classList.add('show');
+    snavInfo.textContent = `${matchIdx+1}/${matchedRules.length}`;
+  } else { snav.classList.remove('show'); }
+}
+function stepResult(dir) {
+  if (!matchedRules.length) return;
+  matchedRules[matchIdx]?.classList.remove('res-cur');
+  matchIdx = (matchIdx + dir + matchedRules.length) % matchedRules.length;
+  matchedRules[matchIdx].classList.add('res-cur');
+  matchedRules[matchIdx].scrollIntoView({behavior:'smooth', block:'center'});
+  updateSnav();
+}
+function clearSearch() {
+  searchEl.value = '';
+  doSearch('');
+  snav.classList.remove('show');
+}
+
+searchEl.addEventListener('input', e => doSearch(e.target.value.trim().toLowerCase()));
+searchEl.addEventListener('keydown', e => {
+  if (e.key==='Enter') { e.shiftKey ? stepResult(-1) : stepResult(1); }
+  if (e.key==='Escape') clearSearch();
+});
+
+function doSearch(q) {
+  document.querySelectorAll('.rule mark').forEach(m => {
+    const t = document.createTextNode(m.textContent);
+    m.parentNode.replaceChild(t, m);
+  });
+  matchedRules = []; matchIdx = -1;
+  document.querySelectorAll('.res-cur').forEach(el => el.classList.remove('res-cur'));
+  let found = 0;
+  rules.forEach(rule => {
+    if (!q) { rule.classList.remove('hidden'); return; }
+    const text = rule.textContent.toLowerCase();
+    const match = text.includes(q);
+    rule.classList.toggle('hidden', !match);
+    if (match) {
+      found++;
+      matchedRules.push(rule);
+      // Открыть секцию
+      const sb = rule.closest('.sec-body');
+      if (sb?.classList.contains('hidden')) { sb.classList.remove('hidden'); sb.previousElementSibling?.classList.add('open'); }
+      highlightIn(rule, q);
+    }
+  });
+  matchIdx = matchedRules.length > 0 ? 0 : -1;
+  if (matchedRules.length > 0) {
+    matchedRules[0].classList.add('res-cur');
+    matchedRules[0].scrollIntoView({behavior:'smooth', block:'center'});
+  }
+  noRes.style.display = (q && found===0) ? 'block' : 'none';
+  foundWrap.style.display = q ? 'block' : 'none';
+  cntFound.textContent = found;
+  updateSnav();
+}
+
+function highlightIn(el, q) {
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(node => {
+    if (!node.textContent.toLowerCase().includes(q)) return;
+    const parts = node.textContent.split(new RegExp(`(${q})`, 'gi'));
+    const frag = document.createDocumentFragment();
+    parts.forEach(p => { if (p.toLowerCase()===q) { const m=document.createElement('mark'); m.textContent=p; frag.appendChild(m); } else frag.appendChild(document.createTextNode(p)); });
+    node.parentNode.replaceChild(frag, node);
+  });
+}
+
+document.querySelectorAll('.flt').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.flt').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const q = searchEl.value.trim().toLowerCase();
+    if (q) { doSearch(q); return; }
+    const f = btn.dataset.f;
+    rules.forEach(rule => {
+      if (f==='all') { rule.classList.remove('hidden'); return; }
+      rule.classList.toggle('hidden', !(rule.dataset.sev||'').includes(f));
+    });
+    const vis = document.querySelectorAll('.rule:not(.hidden)').length;
+    cntFound.textContent = vis;
+    foundWrap.style.display = f!=='all' ? 'inline' : 'none';
+    noRes.style.display = vis===0 ? 'block' : 'none';
+  });
+});
+
+// FLASH ON ANCHOR
+function flashRule(hash) {
+  if (!hash) return;
+  const el = document.querySelector(hash);
+  if (!el || !el.classList.contains('rule')) return;
+  const sb = el.closest('.sec-body');
+  if (sb?.classList.contains('hidden')) { sb.classList.remove('hidden'); sb.previousElementSibling?.classList.add('open'); }
+  el.classList.add('visible');
+  el.classList.remove('rflash');
+  void el.offsetWidth;
+  el.classList.add('rflash');
+  setTimeout(() => el.classList.remove('rflash'), 2000);
+}
+window.addEventListener('hashchange', () => flashRule(location.hash));
+setTimeout(() => flashRule(location.hash), 300);
+
+// RULE REF TOOLTIPS
+const rrefTip = document.createElement('div');
+rrefTip.id = 'rref-tip';
+rrefTip.innerHTML = '<div class="rt-num"></div><div class="rt-name"></div><div class="rt-body"></div>';
+document.body.appendChild(rrefTip);
+
+function getRuleByNum(num) {
+  for (const el of document.querySelectorAll('.rule-num')) {
+    if (el.textContent.trim() === num) return el.closest('.rule');
+  }
+  return null;
+}
+
+function initRuleRefs() {
+  const RE = /\b(\d+\.\d+(?:\.\d+)*)\b/g;
+  const walker = document.createTreeWalker(document.querySelector('.main'), NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) {
+    const n = walker.currentNode;
+    const skip = n.parentElement?.closest('.rule-num, .rule-name, .anchor, .badge, .sec-n, .sec-title');
+    if (!skip && RE.test(n.textContent)) nodes.push(n);
+    RE.lastIndex = 0;
+  }
+  nodes.forEach(node => {
+    RE.lastIndex = 0;
+    const text = node.textContent;
+    const frag = document.createDocumentFragment();
+    let last = 0, m;
+    while ((m = RE.exec(text)) !== null) {
+      const rule = getRuleByNum(m[1]);
+      if (!rule) { continue; }
+      frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+      const span = document.createElement('span');
+      span.className = 'rref';
+      span.textContent = m[0];
+      span.dataset.ruleId = rule.id;
+      frag.appendChild(span);
+      last = m.index + m[0].length;
+    }
+    if (last === 0) return;
+    frag.appendChild(document.createTextNode(text.slice(last)));
+    node.parentNode.replaceChild(frag, node);
+  });
+}
+
+document.addEventListener('mouseover', e => {
+  const ref = e.target.closest('.rref');
+  if (!ref) return;
+  const rule = document.getElementById(ref.dataset.ruleId);
+  if (!rule) return;
+  rrefTip.querySelector('.rt-num').textContent = rule.querySelector('.rule-num')?.textContent || '';
+  rrefTip.querySelector('.rt-name').textContent = rule.querySelector('.rule-name')?.textContent || '';
+  const body = rule.querySelector('.rule-body');
+  rrefTip.querySelector('.rt-body').textContent = body ? body.textContent.trim().slice(0, 280) : '';
+  rrefTip.classList.add('show');
+});
+document.addEventListener('mousemove', e => {
+  if (!rrefTip.classList.contains('show')) return;
+  const x = Math.min(e.clientX + 14, window.innerWidth - 480);
+  const y = e.clientY + 18 + rrefTip.offsetHeight > window.innerHeight
+    ? e.clientY - rrefTip.offsetHeight - 10
+    : e.clientY + 18;
+  rrefTip.style.left = x + 'px';
+  rrefTip.style.top  = y + 'px';
+});
+document.addEventListener('mouseout', e => {
+  if (!e.relatedTarget?.closest?.('.rref')) rrefTip.classList.remove('show');
+});
+
+initRuleRefs();
+</script>
+</body>
+</html>
