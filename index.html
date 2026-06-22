@@ -1002,16 +1002,26 @@ document.addEventListener('mouseout', e => {
 
 initRuleRefs();
 
-/* ── TAB SWITCH: ПРАВИЛА / ЛОР ── */
-function switchView(v){
+/* ── TAB SWITCH: ПРАВИЛА / ЛОР (прямые ссылки через #lore) ── */
+function setView(v){
   const lore = (v === 'lore');
   document.body.classList.toggle('show-lore', lore);
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.view === v));
   const sec = document.getElementById('logo-sec');
   if (sec) sec.textContent = lore ? '/ ЛОР' : '/ ПРАВИЛА';
-  setHdr(false);
-  window.scrollTo({top:0, behavior:'instant' in document.documentElement.style ? 'instant' : 'auto'});
 }
+function switchView(v){
+  setView(v);
+  setHdr(false);
+  if (v === 'lore') history.replaceState(null, '', '#lore');
+  else history.replaceState(null, '', location.pathname + location.search);
+  window.scrollTo({top:0});
+}
+function applyViewFromHash(){
+  setView(location.hash === '#lore' ? 'lore' : 'rules');
+}
+window.addEventListener('hashchange', applyViewFromHash);
+applyViewFromHash();
 </script>
 </body>
 </html>
