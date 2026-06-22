@@ -208,10 +208,12 @@ header{transition:top .3s cubic-bezier(.4,0,.2,1);}
 .tab.active{border-color:var(--accent);color:var(--accent);background:var(--accent-d);}
 
 /* LORE VIEW */
-#view-lore{display:none;}
+#view-lore{display:none;position:relative;}
 body.show-lore #view-rules{display:none;}
 body.show-lore #view-lore{display:block;}
-.lore-wrap{max-width:1000px;margin:0 auto;padding:calc(var(--hdr) + 28px) 20px 80px;}
+#lore-bg{position:fixed;inset:0;z-index:0;background:#0a0a0b url('lore-bg.jpg') center/cover no-repeat;}
+#lore-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(rgba(10,10,11,0.80),rgba(10,10,11,0.90));}
+.lore-wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:calc(var(--hdr) + 28px) 20px 80px;}
 .lore-timeline{position:relative;margin-top:30px;}
 .lore-timeline::before{content:'';position:absolute;left:200px;top:6px;bottom:30px;width:1px;background:linear-gradient(to bottom,var(--accent),rgba(176,122,224,0.15),transparent);}
 .lore-item{position:relative;display:flex;gap:28px;padding:0 0 26px;}
@@ -692,6 +694,7 @@ body.show-lore #view-lore{display:block;}
 </div><!-- /view-rules -->
 
 <div id="view-lore">
+  <div id="lore-bg"></div>
   <div class="lore-wrap">
     <div class="hero hud" id="lore-top">
       <div class="hero-glow"></div>
