@@ -7,6 +7,7 @@
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="icon" type="image/png" sizes="96x96" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="leaflet/leaflet.css">
 <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -209,8 +210,11 @@ header{transition:top .3s cubic-bezier(.4,0,.2,1);}
 
 /* LORE VIEW */
 #view-lore{display:none;position:relative;}
-body.show-lore #view-rules{display:none;}
+#view-map{display:none;}
+body.show-lore #view-rules,body.show-map #view-rules{display:none;}
+body.show-map #view-lore{display:none;}
 body.show-lore #view-lore{display:block;}
+body.show-map #view-map{display:block;}
 #lore-bg{position:fixed;inset:0;z-index:0;background:#0a0a0b url('lore-bg.jpg') center/cover no-repeat;}
 #lore-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 95% 85% at 50% 42%,rgba(10,10,11,0.55) 0%,rgba(10,10,11,0.78) 52%,rgba(10,10,11,0.93) 100%);}
 .lore-wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:calc(var(--hdr) + 28px) 20px 80px;}
@@ -232,6 +236,46 @@ body.show-lore #view-lore{display:block;}
   .lore-dot{left:1px;}.lore-dot-now{left:-2px;}
   .lore-content{padding-left:24px;border-left:none;}
 }
+
+/* MAP VIEW */
+#view-map{position:fixed;top:var(--hdr);left:0;right:0;bottom:0;}
+#lmap{position:absolute;inset:0;background:#0a0a0b;}
+.leaflet-container{background:#0a0a0b;font-family:var(--M);outline:none;}
+.leaflet-bar{border:1px solid var(--border)!important;box-shadow:none!important;}
+.leaflet-bar a{background:var(--bg-glass)!important;color:var(--accent)!important;border-bottom:1px solid var(--border)!important;width:30px;height:30px;line-height:30px;}
+.leaflet-bar a:hover{background:var(--bg-card2)!important;}
+.mk{cursor:pointer;}
+.mk-dot{width:16px;height:16px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #0a0a0b;box-shadow:0 0 0 1px rgba(0,0,0,.5),0 2px 6px rgba(0,0,0,.6);}
+.mk-lbl{position:absolute;left:50%;top:20px;transform:translateX(-50%);font-size:11px;color:var(--text);background:rgba(10,10,11,.82);padding:1px 6px;border:1px solid var(--border);white-space:nowrap;font-family:var(--M);pointer-events:none;}
+.leaflet-popup-content-wrapper{background:var(--bg-card2);color:var(--text-dim);border:1px solid var(--accent);border-radius:0;box-shadow:0 8px 40px rgba(0,0,0,.7);}
+.leaflet-popup-tip{background:var(--bg-card2);border:1px solid var(--accent);}
+.leaflet-popup-content{margin:13px 16px;font-family:var(--M);font-size:14px;line-height:1.6;}
+.leaflet-popup-content h4{font-family:var(--H);font-size:16px;color:var(--text);margin-bottom:4px;}
+.leaflet-popup-content .mp-type{font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+.leaflet-popup-content a{color:var(--accent);}
+.leaflet-container a.leaflet-popup-close-button{color:var(--text-xs);}
+.map-legend{position:absolute;top:14px;left:14px;z-index:600;background:var(--bg-glass);border:1px solid var(--border);padding:10px 12px;font-family:var(--M);font-size:12px;backdrop-filter:blur(8px);max-width:210px;}
+.map-legend .ml-title{font-size:10px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:8px;}
+.ml-item{display:flex;align-items:center;gap:8px;padding:3px 0;cursor:crosshair;color:var(--text-dim);user-select:none;}
+.ml-item.off{opacity:.4;text-decoration:line-through;}
+.ml-sw{width:11px;height:11px;border-radius:50%;flex-shrink:0;border:1px solid rgba(0,0,0,.5);}
+.ml-cnt{margin-left:auto;color:var(--text-xs);}
+.map-editor{position:absolute;top:14px;right:14px;z-index:600;background:var(--bg-glass);border:1px solid var(--border);padding:12px;font-family:var(--M);font-size:12px;backdrop-filter:blur(8px);width:240px;display:none;max-height:calc(100% - 28px);overflow-y:auto;}
+.map-editor.open{display:block;}
+.map-editor .me-title{font-size:10px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:6px;}
+.map-editor .me-hint{font-size:11px;color:var(--text-xs);line-height:1.5;margin-bottom:8px;}
+.map-editor label{display:block;font-size:10px;color:var(--text-xs);margin:8px 0 3px;text-transform:uppercase;}
+.map-editor input,.map-editor select,.map-editor textarea{width:100%;background:var(--bg-card);border:1px solid var(--border);color:var(--text);font-family:var(--M);font-size:12px;padding:5px 7px;outline:none;box-sizing:border-box;}
+.map-editor textarea{resize:vertical;min-height:44px;}
+.map-editor input:focus,.map-editor select:focus,.map-editor textarea:focus{border-color:var(--accent);}
+.me-btn{font-family:var(--M);font-size:11px;letter-spacing:1px;padding:6px 8px;background:transparent;border:1px solid var(--border);color:var(--text-dim);cursor:crosshair;transition:all .15s;margin-top:8px;width:100%;text-transform:uppercase;}
+.me-btn:hover{border-color:var(--accent);color:var(--accent);}
+.me-btn.primary{border-color:var(--accent);color:var(--accent);background:var(--accent-d);}
+.me-coord{font-size:13px;color:var(--accent);margin:4px 0;}
+.map-edit-toggle{position:absolute;bottom:18px;left:14px;z-index:600;font-family:var(--M);font-size:11px;letter-spacing:1px;padding:7px 12px;background:var(--bg-glass);border:1px solid var(--border);color:var(--text-xs);cursor:crosshair;backdrop-filter:blur(8px);text-transform:uppercase;}
+.map-edit-toggle:hover,.map-edit-toggle.active{border-color:var(--accent);color:var(--accent);}
+.map-coord-live{position:absolute;bottom:18px;right:14px;z-index:600;font-family:var(--M);font-size:11px;color:var(--text-xs);background:var(--bg-glass);border:1px solid var(--border-f);padding:5px 10px;backdrop-filter:blur(8px);}
+@media(max-width:600px){.map-legend{font-size:11px;max-width:150px;}.map-editor{width:200px;}}
 </style>
 </head>
 <body>
@@ -242,6 +286,7 @@ body.show-lore #view-lore{display:block;}
   <div class="tabs">
     <button class="tab active" data-view="rules" onclick="switchView('rules')">ПРАВИЛА</button>
     <button class="tab" data-view="lore" onclick="switchView('lore')">ЛОР</button>
+    <button class="tab" data-view="map" onclick="switchView('map')">КАРТА</button>
   </div>
   <div class="hdr-r">
     <div class="hdr-stat">Правил: <b id="cnt">0</b></div>
@@ -741,10 +786,33 @@ body.show-lore #view-lore{display:block;}
   </div>
 </div>
 
+<div id="view-map">
+  <div id="lmap"></div>
+  <div class="map-legend" id="map-legend"><div class="ml-title">Слои карты</div></div>
+  <div class="map-editor" id="map-editor">
+    <div class="me-title">Режим редактора</div>
+    <div class="me-hint">Кликни по карте — возьмутся координаты. Заполни поля и добавь метку. Потом «Экспорт» → пришлёшь мне JSON, вобью в карту.</div>
+    <div class="me-coord" id="me-coord">X: —&nbsp;&nbsp; Y: —</div>
+    <label>Название</label>
+    <input id="me-name" type="text" placeholder="Напр. Бар 100 Рентген">
+    <label>Тип</label>
+    <select id="me-type"></select>
+    <label>Описание</label>
+    <textarea id="me-desc" placeholder="Краткое описание / правило"></textarea>
+    <button class="me-btn primary" onclick="MapApp.addAt()">+ Добавить метку</button>
+    <div style="display:flex;gap:6px;"><button class="me-btn" onclick="MapApp.exportJSON()">Экспорт</button><button class="me-btn" onclick="document.getElementById('me-import').click()">Импорт</button></div>
+    <input id="me-import" type="file" accept=".json" style="display:none" onchange="MapApp.importJSON(event)">
+    <button class="me-btn" onclick="MapApp.undoLast()">Удалить последнюю</button>
+  </div>
+  <button class="map-edit-toggle" id="map-edit-toggle" onclick="MapApp.toggleEditor()">✎ Редактор</button>
+  <div class="map-coord-live" id="map-coord-live" style="display:none">X: 0  Y: 0</div>
+</div>
+
 <button id="btt" onclick="document.getElementById('top').scrollIntoView({behavior:'smooth'})">↑</button>
 
 <footer>OVERCOMING RP · ZONE PROTOCOL · <span>Правила сервера</span></footer>
 
+<script src="leaflet/leaflet.js"></script>
 <script>
 const rules = document.querySelectorAll('.rule');
 document.getElementById('cnt').textContent = rules.length;
@@ -1002,23 +1070,116 @@ document.addEventListener('mouseout', e => {
 
 initRuleRefs();
 
-/* ── TAB SWITCH: ПРАВИЛА / ЛОР (прямые ссылки через #lore) ── */
+/* ── helpers ── */
+function escMap(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function toast(msg){ var t=document.createElement('div'); t.textContent=msg; t.style.cssText='position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:var(--bg-card2);color:var(--text);border:1px solid var(--accent);padding:8px 16px;font:12px var(--M);z-index:9999;box-shadow:0 8px 30px rgba(0,0,0,.6);'; document.body.appendChild(t); setTimeout(function(){t.remove();},2200); }
+
+/* ── INTERACTIVE MAP (Leaflet, self-hosted) ── */
+const MapApp = (function(){
+  const TILE=512, GRID=22, W=GRID*TILE, H=GRID*TILE; // 11264 px
+  const TYPES = {
+    green:  {name:'Зелёная зона',   color:'#34d399'},
+    red:    {name:'Красная зона',   color:'#f87171'},
+    neutral:{name:'Нейтральная',    color:'#fbbf24'},
+    base:   {name:'База ГП',        color:'#b07ae0'},
+    trader: {name:'Торговец',       color:'#60a5fa'},
+    poi:    {name:'Точка интереса', color:'#c8b99a'}
+  };
+  // x,y — пиксели карты 0..11264 (левый-верхний угол = 0,0)
+  let MARKERS = [
+    {x:5630,y:5630,type:'poi',name:'Пример метки',desc:'Демонстрация. Включи «Редактор», кликни по карте и добавь свои точки — потом «Экспорт».'}
+  ];
+  let map=null, inited=false, editor=false, _last=null;
+  const groups={}, hidden={}; let userAdded=[];
+  const pad=n=>String(n).padStart(3,'0');
+  const latlng=(x,y)=>L.latLng(-y,x);
+  const pix=ll=>({x:Math.round(ll.lng), y:Math.round(-ll.lat)});
+
+  function init(){
+    if(inited) return; inited=true;
+    map=L.map('lmap',{crs:L.CRS.Simple,minZoom:-4,maxZoom:1,zoomSnap:0.25,zoomDelta:0.5,attributionControl:false,maxBoundsViscosity:0.7});
+    const b=[[-H,0],[0,W]];
+    L.imageOverlay('map-overview.jpg', b).addTo(map);
+    const Tiles=L.TileLayer.extend({ getTileUrl:function(c){ return 'map/S_'+pad(c.x)+'_'+pad(c.y)+'_lco.png'; } });
+    new Tiles('',{tileSize:TILE,minZoom:-1,maxZoom:1,minNativeZoom:0,maxNativeZoom:0,bounds:b,noWrap:true,
+      errorTileUrl:'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='}).addTo(map);
+    map.fitBounds(b);
+    map.setMaxBounds([[-H*1.2,-W*0.2],[H*0.2,W*1.2]]);
+    buildLegend(); renderMarkers();
+    map.on('mousemove', e=>{ if(editor) document.getElementById('map-coord-live').textContent='X: '+Math.round(e.latlng.lng)+'  Y: '+Math.round(-e.latlng.lat); });
+    map.on('click', e=>{ if(!editor) return; _last=pix(e.latlng); document.getElementById('me-coord').textContent='X: '+_last.x+'   Y: '+_last.y; });
+  }
+  function getGroup(t){ if(!groups[t]) groups[t]=L.layerGroup().addTo(map); return groups[t]; }
+  function applyHidden(){ for(const t in groups){ if(hidden[t]) map.removeLayer(groups[t]); else groups[t].addTo(map); } }
+  function renderMarkers(){
+    for(const t in groups){ map.removeLayer(groups[t]); delete groups[t]; }
+    MARKERS.concat(userAdded).forEach(m=>{
+      const t=TYPES[m.type]||TYPES.poi;
+      const icon=L.divIcon({className:'',iconSize:[16,16],iconAnchor:[8,16],
+        html:'<div class="mk"><div class="mk-dot" style="background:'+t.color+'"></div><div class="mk-lbl">'+escMap(m.name)+'</div></div>'});
+      const mk=L.marker(latlng(m.x,m.y),{icon}).addTo(getGroup(m.type));
+      const link=m.rule?'<br><br><a href="'+m.rule+'" onclick="switchView(\'rules\')">→ к правилу</a>':'';
+      mk.bindPopup('<h4>'+escMap(m.name)+'</h4><div class="mp-type" style="color:'+t.color+'">'+t.name+'</div>'+(m.desc?escMap(m.desc).replace(/\n/g,'<br>'):'')+link);
+    });
+    applyHidden();
+  }
+  function buildLegend(){
+    const all=MARKERS.concat(userAdded); let h='<div class="ml-title">Слои карты</div>';
+    for(const k in TYPES){ const c=all.filter(m=>m.type===k).length;
+      h+='<div class="ml-item'+(hidden[k]?' off':'')+'" onclick="MapApp.toggleType(\''+k+'\')"><span class="ml-sw" style="background:'+TYPES[k].color+'"></span>'+TYPES[k].name+'<span class="ml-cnt">'+c+'</span></div>'; }
+    document.getElementById('map-legend').innerHTML=h;
+  }
+  function toggleType(t){ hidden[t]=!hidden[t]; applyHidden(); buildLegend(); }
+  function toggleEditor(){
+    editor=!editor;
+    document.getElementById('map-editor').classList.toggle('open',editor);
+    document.getElementById('map-edit-toggle').classList.toggle('active',editor);
+    document.getElementById('map-coord-live').style.display=editor?'block':'none';
+    const sel=document.getElementById('me-type');
+    if(sel && !sel.children.length){ for(const k in TYPES){ const o=document.createElement('option'); o.value=k; o.textContent=TYPES[k].name; sel.appendChild(o); } }
+  }
+  function addAt(){
+    if(!_last){ toast('Сначала кликни по карте'); return; }
+    userAdded.push({x:_last.x,y:_last.y,type:document.getElementById('me-type').value||'poi',
+      name:document.getElementById('me-name').value.trim()||'Без названия',
+      desc:document.getElementById('me-desc').value.trim()});
+    document.getElementById('me-name').value=''; document.getElementById('me-desc').value='';
+    renderMarkers(); buildLegend(); toast('Метка добавлена ('+_last.x+', '+_last.y+')');
+  }
+  function undoLast(){ if(userAdded.length){ userAdded.pop(); renderMarkers(); buildLegend(); toast('Удалена последняя'); } }
+  function exportJSON(){
+    const data=JSON.stringify(MARKERS.concat(userAdded),null,2);
+    const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([data],{type:'application/json'})); a.download='markers.json'; a.click();
+    toast('Экспорт: '+(MARKERS.length+userAdded.length)+' меток');
+  }
+  function importJSON(ev){
+    const f=ev.target.files[0]; if(!f) return;
+    const r=new FileReader(); r.onload=()=>{ try{ const arr=JSON.parse(r.result); if(Array.isArray(arr)){ MARKERS=arr; userAdded=[]; renderMarkers(); buildLegend(); toast('Импорт: '+arr.length+' меток'); } }catch(e){ toast('Ошибка JSON'); } }; r.readAsText(f); ev.target.value='';
+  }
+  function ensureSize(){ if(map) setTimeout(()=>{ map.invalidateSize(); map.fitBounds([[-H,0],[0,W]]); },60); }
+  return {init,ensureSize,toggleType,toggleEditor,addAt,undoLast,exportJSON,importJSON};
+})();
+
+/* ── TAB SWITCH: ПРАВИЛА / ЛОР / КАРТА (прямые ссылки #lore #map) ── */
 function setView(v){
-  const lore = (v === 'lore');
-  document.body.classList.toggle('show-lore', lore);
+  document.body.classList.remove('show-lore','show-map');
+  if(v==='lore') document.body.classList.add('show-lore');
+  if(v==='map'){ document.body.classList.add('show-map'); MapApp.init(); MapApp.ensureSize(); }
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.view === v));
   const sec = document.getElementById('logo-sec');
-  if (sec) sec.textContent = lore ? '/ ЛОР' : '/ ПРАВИЛА';
+  if (sec) sec.textContent = v==='lore' ? '/ ЛОР' : (v==='map' ? '/ КАРТА' : '/ ПРАВИЛА');
 }
 function switchView(v){
   setView(v);
   setHdr(false);
   if (v === 'lore') history.replaceState(null, '', '#lore');
+  else if (v === 'map') history.replaceState(null, '', '#map');
   else history.replaceState(null, '', location.pathname + location.search);
-  window.scrollTo({top:0});
+  if (v !== 'map') window.scrollTo({top:0});
 }
 function applyViewFromHash(){
-  setView(location.hash === '#lore' ? 'lore' : 'rules');
+  const h = location.hash;
+  setView(h === '#lore' ? 'lore' : (h === '#map' ? 'map' : 'rules'));
 }
 window.addEventListener('hashchange', applyViewFromHash);
 applyViewFromHash();

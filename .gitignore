@@ -1,0 +1,10 @@
+map/
+node_modules/
+_*.py
+_*.txt
+_*.html
+fon.png
+3.1.png
+*.docx
+index_*backup*.html
+index_ПРАВИЛА_backup*.html
